@@ -1,3 +1,5 @@
+;; Ashley Towne
+;; 1/30/16
 ;; utility functions
 (define firsts
   (lambda (lat)
@@ -28,7 +30,7 @@
 ;; acronym finder
 (define acronyms
   (lambda (dict words)
-    (cond 
+    (cond
       ((null? dict) '()) ; check if null
       ((subset? (car dict) (firsts words)) (cons (car dict) (acronyms (cdr dict) words)))
       (else (acronyms (cdr dict) words)))))

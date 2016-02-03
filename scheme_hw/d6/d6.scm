@@ -2,9 +2,9 @@
 ;; name: Ashley Towne
 ;; date: 2/2/16
 
-(use-modules (ice-9 debugging traps) (ice-9 debugging trace))
+;(use-modules (ice-9 debugging traps) (ice-9 debugging trace))
 
-(define atom? 
+(define atom?
   (lambda (x)
     (and (not (null? x)) (not (pair? x)))))
 
@@ -17,9 +17,9 @@
 	; YOUR CODE HERE :-)
 
 
-(install-trap (make <procedure-trap>
-                            #:procedure sum*
-                            #:behaviour (list trace-trap trace-until-exit)))
+;(install-trap (make <procedure-trap>
+;                            #:procedure sum*
+;                            #:behaviour (list trace-trap trace-until-exit)))
 
 ;; tests!
 (display (sum* '((5)) ))

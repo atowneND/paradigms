@@ -16,9 +16,7 @@
 ;; output:
 ;; (copy the output you saw here)
 ;; question 1: #f
-;; with guile: question 1: guile> #fguile> (this output is how all the
-;; questions appeared)
-;; 
+;;
 ;; explanation:
 ;; "question 1: " is printed. Then q is cdr'd twice then car'd, which is not an
 ;; atom. q = (turkey (gravy) (stuffing potatoes ham) peas) -> ((gravy)
@@ -45,10 +43,10 @@
 
 ;; question 3
 (display "question 3: ")
-(display (cond 
-           ((atom? 
-              (car q)) 
-            (car q)) 
+(display (cond
+           ((atom?
+              (car q))
+            (car q))
            (else '())))
 (display "\n")
 ;; output:
