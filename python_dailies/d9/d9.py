@@ -28,6 +28,6 @@ with open(inputfile) as f:
         total_salaries = total_salaries + s
     maxnumlen = len(str(total_salaries))
     avg_salary = total_salaries/num_employees
-    print 'Total payroll:       ${0}'.format(total_salaries)
-    print 'Number of employees:  {0}{1}'.format(' '*(maxnumlen-len(str(num_employees))),num_employees)
-    print 'Average yearly pay:  ${:>10}'.format(' '*(maxnumlen-len(str(avg_salary))),avg_salary)
+    print 'Total payroll:       ${:>}'.format(total_salaries)
+    print 'Number of employees: {:>{}}'.format(num_employees,maxnumlen+1)
+    print 'Average yearly pay:  ${:>{}.2f}'.format(avg_salary,maxnumlen)
