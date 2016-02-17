@@ -36,12 +36,6 @@ with open(inputfile) as f:
     maxnumlen = len(str(total_salaries))
     avg_salary = total_salaries/num_employees
 
-    # THIS FORMAT DOESN'T WORK ON THE PYTHON VERSION THAT THE STUDENT MACHINES
-    # HAVE BUT IT WORKS ON MY LAPTOP
-#    print 'Total payroll:       ${:>}'.format(total_salaries)
-#    print 'Number of employees: {:>{}}'.format(num_employees,maxnumlen+1)
-#    print 'Average yearly pay:  ${:>{}.>2f}'.format(avg_salary,maxnumlen)
-
     print 'Total payroll:       $%0.2f' % total_salaries
     print "Number of employees:  %s%i" % (" "*(maxnumlen-len(str(num_employees))), num_employees)
     print "Average yearly pay:  $%s%0.2f" % (" "*(maxnumlen-len(str(round(avg_salary,2)))), avg_salary)
