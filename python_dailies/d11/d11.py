@@ -1,0 +1,56 @@
+# Ashley Towne
+# 2/17/2016
+# d11.py
+
+from employee import Employee as emp
+from employee import EmployeeA as empA
+from employee import EmployeeAB as empAB
+from employee import EmployeeC as empC
+from salaries import *
+import csv
+import numpy as np
+
+
+if __name__=="__main__":
+    """
+        Ashley Towne
+        2/17/2016
+        d11.py
+    """
+    # generates dictionary of job titles and classes
+    roleclassfile = 'roleclass.csv'
+    class_dict = {}
+    with open(roleclassfile) as f:
+        data = csv.DictReader(f,fieldnames=['Title','Class'])
+        for row in data:
+            if (row['Title']):
+                title = row['Title']
+                jobclass = row['Class']
+                class_dict[title] = jobclass
+
+    # generate the dictionary of city employees by reading chisalaries.csv
+    inputfile = 'chisalaries.csv'
+    employee_list = []
+    with open(inputfile) as f:
+        data = csv.DictReader(f)
+        for row in data:
+            if (row['Name']):
+                name = row['Name']
+                title = row['Position Title']
+                dept = row['Department']
+                emp_class = class_dict[title]
+                salary =  float(row['Employee Annual Salary'].replace('$',''))
+                if (emp_class == 'A'):
+                    e = empA(name, title, dept, salary)
+                elif (emp_class == 'AB'):
+                    e = empAB(name, title, dept, salary)
+                elif (emp_class == 'C'):
+                    e = empC(name, title, dept, salary)
+                employee_list.append(e)
+
+    print computeClassPercentages(employee_list,class_dict)
+    for i in xrange(5):
+        giveEveryoneARaise(employee_list)
+    print computeClassPercentages(employee_list,class_dict)
+    print "Median salary of all city employees: $%.2f" % getMedianSalary(employee_list)
+    print "Average salary of all city employees: $%.2f" % getAverageSalary(employee_list)
