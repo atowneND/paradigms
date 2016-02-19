@@ -2,9 +2,8 @@
 # 2/17/2016
 # d11.py
 
-#from foo import *
-
-from employee import employee as emp
+#from employee import employee as emp
+from employee.employee import *
 from salaries import *
 import csv
 import numpy as np
@@ -40,11 +39,11 @@ if __name__=="__main__":
                 emp_class = class_dict[title]
                 salary =  float(row['Employee Annual Salary'].replace('$',''))
                 if (emp_class == 'A'):
-                    e = emp.EmployeeA(name, title, dept, salary)
+                    e = EmployeeA(name, title, dept, salary)
                 elif (emp_class == 'AB'):
-                    e = emp.EmployeeAB(name, title, dept, salary)
+                    e = EmployeeAB(name, title, dept, salary)
                 elif (emp_class == 'C'):
-                    e = emp.EmployeeC(name, title, dept, salary)
+                    e = EmployeeC(name, title, dept, salary)
                 employee_list.append(e)
 
     print "Percent before raise (A,B,C):",computeClassPercentages(employee_list,class_dict)
