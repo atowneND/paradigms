@@ -51,13 +51,11 @@ def computeClassPercentages(l,cd):
         s = e.getSalary()
         if (emp_class == 'A'):
             a_salary += s
-            tot_salary += s
         elif (emp_class == 'AB'):
             ab_salary += s
-            tot_salary += s
         elif (emp_class == 'C'):
             c_salary += s
-            tot_salary += s
+        tot_salary += s
 
     ap = a_salary*1.0/tot_salary
     abp = ab_salary*1.0/tot_salary
