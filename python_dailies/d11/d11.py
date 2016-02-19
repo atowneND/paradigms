@@ -2,10 +2,9 @@
 # 2/17/2016
 # d11.py
 
-from employee import Employee as emp
-from employee import EmployeeA as empA
-from employee import EmployeeAB as empAB
-from employee import EmployeeC as empC
+#from foo import *
+
+from employee import employee as emp
 from salaries import *
 import csv
 import numpy as np
@@ -41,16 +40,16 @@ if __name__=="__main__":
                 emp_class = class_dict[title]
                 salary =  float(row['Employee Annual Salary'].replace('$',''))
                 if (emp_class == 'A'):
-                    e = empA(name, title, dept, salary)
+                    e = emp.EmployeeA(name, title, dept, salary)
                 elif (emp_class == 'AB'):
-                    e = empAB(name, title, dept, salary)
+                    e = emp.EmployeeAB(name, title, dept, salary)
                 elif (emp_class == 'C'):
-                    e = empC(name, title, dept, salary)
+                    e = emp.EmployeeC(name, title, dept, salary)
                 employee_list.append(e)
 
-    print computeClassPercentages(employee_list,class_dict)
+    print "Percent before raise (A,B,C):",computeClassPercentages(employee_list,class_dict)
     for i in xrange(5):
         giveEveryoneARaise(employee_list)
-    print computeClassPercentages(employee_list,class_dict)
+    print "Percent after raise (A,B,C):",computeClassPercentages(employee_list,class_dict)
     print "Median salary of all city employees: $%.2f" % getMedianSalary(employee_list)
     print "Average salary of all city employees: $%.2f" % getAverageSalary(employee_list)

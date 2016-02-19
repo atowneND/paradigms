@@ -27,15 +27,10 @@ def getAverageSalary(l):
 def getMedianSalary(l):
     l.sort()
     num_peeps = len(l)/2
-    #ls = [e.getSalary() for e in l]
-    #print "np.med =", np.median(ls)
     if (len(l)%2==0): # even
         return (l[num_peeps].getSalary() + l[num_peeps-1].getSalary())/2.
     else: # odd
-        return l[num_peeps+1].getSalary()
-
-def sortKey(e):
-    return e.getSalary()
+        return l[num_peeps-1].getSalary()
 
 def getOnePercent(l):
     l.sort()
