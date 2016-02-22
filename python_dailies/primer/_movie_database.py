@@ -22,7 +22,7 @@ class _movie_database:
         if mid not in self.movies:
             return None
         else:
-            return self.movies[mid]['name'], self.movies[mid]['genres']
+            return [self.movies[mid]['name'], self.movies[mid]['genres']]
 
     def get_movies(self):
         return [i for i in self.movies]
@@ -45,7 +45,7 @@ class _movie_database:
         if uid not in self.users:
             return None
         else:
-            return self.users[uid]['gender'], int(self.users[uid]['age']), int(self.users[uid]['occupationcode']), self.users[uid]['zipcode']
+            return [self.users[uid]['gender'], int(self.users[uid]['age']), int(self.users[uid]['occupationcode']), self.users[uid]['zipcode']]
     
     def get_users(self):
         return [i for i in self.users]
@@ -62,8 +62,8 @@ class _movie_database:
             for line in f:
                 line = line.rstrip()
                 rate_attr = line.split("::") # rating attributes
-                mid = int(rate_attr[0])
-                uid = int(rate_attr[1])
+                mid = int(rate_attr[1])
+                uid = int(rate_attr[0])
                 if mid not in self.ratings:
                     self.ratings[mid] = {uid:int(rate_attr[2])}
                 else:
@@ -74,19 +74,20 @@ class _movie_database:
             return None
         else: 
             vals = self.ratings[mid].values()
-            return float(
-                sum(vals)
-            )/len(vals)
+            return float( sum(vals))/float(len(vals))
 
     def get_highest_rated_movie(self):
-        print max(
-                [[mid,self.get_rating(mid)] for mid in self.ratings],
-                key=lambda x: int(x[1]),
-            )[0]
+        highest = 0
+        retmid = 0
+        for mid in self.ratings:
+            rat = self.get_rating(mid)
+            if (rat > highest):
+                highest = rat
+                retmid = mid
+        return retmid
+#        return max( [[self.get_rating(mid), mid] for mid in self.ratings] )[1]
 
     def set_user_movie_rating(self, uid, mid, rating):
-        if (mid not in self.ratings) or (uid not in self.ratings[mid]):
-            return None
         self.ratings[mid][uid] = int(rating)
 
     def get_user_movie_rating(self, uid, mid):
@@ -96,17 +97,4 @@ class _movie_database:
 
     def delete_all_ratings(self):
         self.ratings.clear()
-
-if __name__=='__main__':
-    m = _movie_database()
-    f = 'ml-1m/movies.dat'
-    m.load_movies(f)
-    f = 'ml-1m/users.dat'
-    m.load_users(f)
-    f = 'ml-1m/ratings.dat'
-    m.load_ratings(f)
-    mid = m.get_highest_rated_movie()
-    print mid, m.get_movie(mid)
-    rat = m.get_rating(mid)
-    print rat
 
