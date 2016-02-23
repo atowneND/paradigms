@@ -77,14 +77,13 @@ class _movie_database:
             return float( sum(vals))/float(len(vals))
 
     def get_highest_rated_movie(self):
-        highest = 0
-        retmid = 0
-        for mid in self.ratings:
-            rat = self.get_rating(mid)
-            if (rat > highest):
-                highest = rat
-                retmid = mid
-        return retmid
+        return max(
+                sorted(
+                        [[mid, self.get_rating(mid)] for mid in self.ratings],
+                        key = lambda x: x[0],
+                    ),
+                key = lambda x:(x[1], -x[0]),
+            )[0]
 #        return max( [[self.get_rating(mid), mid] for mid in self.ratings] )[1]
 
     def set_user_movie_rating(self, uid, mid, rating):
@@ -97,4 +96,3 @@ class _movie_database:
 
     def delete_all_ratings(self):
         self.ratings.clear()
-
