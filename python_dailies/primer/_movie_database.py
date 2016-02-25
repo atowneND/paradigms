@@ -96,3 +96,8 @@ class _movie_database:
 
     def delete_all_ratings(self):
         self.ratings.clear()
+
+if __name__ == '__main__':
+    m = _movie_database()
+    m.load_movies('ml-1m/movies.dat')
+    print m.get_movie(119)
