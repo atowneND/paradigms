@@ -1,0 +1,48 @@
+[atowne@student02 webprimer]$ batmail -s "web service primer" -a
+_webservice_primer.py prog.paradigms.sec2.sp16@gmail.com
+EOT
+Null message body; hope that's ok
+Resolving host smtp.gmail.com . . . done.
+Connecting to 74.125.135.108 . . .^E connected.
+220 smtp.gmail.com ESMTP g67sm4144682ioe.34 - gsmtp
+>>> EHLO student02.cse.nd.edu
+250-smtp.gmail.com at your service, [129.74.152.75]
+250-SIZE 35882577
+250-8BITMIME
+250-STARTTLS
+250-ENHANCEDSTATUSCODES
+250-PIPELINING
+250-CHUNKING
+250 SMTPUTF8
+>>> STARTTLS
+220 2.0.0 Ready to start TLS
+Error in certificate: Peer's certificate issuer is not recognized.
+Comparing DNS name: "smtp.gmail.com"
+SSL parameters: cipher=AES-128, keysize=128, secretkeysize=128,
+issuer=CN=Google Internet Authority G2,O=Google Inc,C=US
+subject=CN=smtp.gmail.com,O=Google Inc,L=Mountain View,ST=California,C=US
+>>> EHLO student02.cse.nd.edu
+250-smtp.gmail.com at your service, [129.74.152.75]
+250-SIZE 35882577
+250-8BITMIME
+250-AUTH LOGIN PLAIN XOAUTH2 PLAIN-CLIENTTOKEN OAUTHBEARER XOAUTH
+250-ENHANCEDSTATUSCODES
+250-PIPELINING
+250-CHUNKING
+250 SMTPUTF8
+>>> AUTH LOGIN
+334 VXNlcm5hbWU6
+>>> YXRvd25lQG5kLmVkdQ==
+334 UGFzc3dvcmQ6
+>>> ZGJhZC45OTk=
+235 2.7.0 Accepted
+>>> MAIL FROM:<atowne@nd.edu>
+250 2.1.0 OK g67sm4144682ioe.34 - gsmtp
+>>> RCPT TO:<-a>
+553 5.1.2 The recipient address <-a> is not a valid RFC-5321 address.
+g67sm4144682ioe.34 - gsmtp
+smtp-server: 553 5.1.2 The recipient address <-a> is not a valid RFC-5321
+address. g67sm4144682ioe.34 - gsmtp
+"/afs/nd.edu/user25/atowne/dead.letter" 12/371
+. . . message not sent.
+
