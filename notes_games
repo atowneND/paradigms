@@ -1,0 +1,35 @@
+Checkers:
+- red goes first
+- 8x8 board
+- starting state - pieces opposite each other
+- moves must be diagonal
+- moves must be to an empty square or jump over an opposing piece
+- end state: w/l decision
+
+Tic-Tac-Toe
+inputs: 'x', 'e', 'o'
+INIT
+x |   |   ======> '(x e e e o x e o e)
+---------             |
+  | o | x             |
+---------             |
+  | o |               |
+NEXT                 \|/
+x | x |   ======> '(x x e e o x e o e)
+---------
+  | o | x
+---------
+  | o |
+
+building blocks for ttt
+- end of game detection (define winner (state)) => x, o, intermediate, draw
+- (define value (state)) => -10 o wins; +10 x wins; 0 otherwise (see handout for sign)
+starting with an empty board
+-> initial state #
+   -> 9 possible places for x to play
+      -> 8 possible places for y to play (for each of the 9 x states)
+      ...
+      (729 end states?)
+win states stop the tree
+symmetry simplifies the tree (by rotation/reflection)
+tree inherits the value of the winning state

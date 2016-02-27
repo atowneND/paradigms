@@ -1,0 +1,36 @@
+BCPL -> C -> C++ -> C#
+         \
+          objective-C -> swift
+         /             | csh
+smalltalk              | bash
+         \             | matlab
+   ABC -> Python       | lua
+                       | perl
+LISP -> ... -> scheme  | tcl/tk -> web services
+                       | ruby -> web services
+
+
+Python attributes
+- interpreted
+- dynamic typing
+- object oriented
+- function
+- huge library
+- "well function set of supervising adults"
+
+functions vs methods
+func: float(x) - returns a float
+method: a piece of code attached to a class or are classes themselves
+
+len(<obj>) is a function, not a method
+ - works on any type with a length
+list = [ <obj0>, <obj1>, <obj2>, <obj2> ]
+ - reverse and insert methods modify lists
+list[:2] - gives first two
+: slicing syntax
+lists can contain mixed types - but they shouldn't
+string method - <string>.split(<delimiter>)
+
+import gzip
+g = gzip.open('compressedfile.txt.gz','w')
+g.write(<string>)

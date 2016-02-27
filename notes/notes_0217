@@ -1,0 +1,11 @@
+inheritance
+
+QUESTIONS:
+when to pass self to a method
+static method vs class method? (decorators?)
+class <class>(object)
+multiple inheritance
+what if:
+    from p1 import *
+    from p2 import *
+    AND p1 and p2 each have a method with the same name?

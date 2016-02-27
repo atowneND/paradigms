@@ -1,0 +1,28 @@
+for next project:
+       |   get   |   set   |   add   | delete
+-------|---------|---------|---------|---------
+users  |         |         |         |
+-------|---------|---------|---------|---------
+movies |         |         |         |
+-------|---------|---------|---------|---------
+rating |         |         |         |
+
+
+HTTP - hypertext transfer protocol
+OO API
+^---web service
+    ^---web client
+    ^---desktop client
+    ^---mobile client
+
+JSON
+
+EXAMPLE
+import requests
+import json
+r = requensts.get('http://uinames.com/api/?amount=25')
+print 'Status: ',r.status_code
+print 'Headers: ',r.headers
+print 'Text: ',r.text
+j = r.json()
+print j[0]['name']

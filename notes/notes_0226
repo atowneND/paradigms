@@ -1,0 +1,21 @@
+dhc rest client - for debugging web stuff
+
+OO graphics
+-RESTful web service
+ -> representational state transfer
+ - url says everything about the request
+ - literal interpretation of url
+ - statelessness - server does not maintain state of client
+ - event-driven philosophy in the server
+-REST vs SOAP
+ -> simple object access protocol
+
+EVENTS:
+- network traffic
+- os "events"
+- hardware events -> memory events ->
+    -> source -> event queue -> dispatcher -> handler (may call other handlers)
+- concurrency issues
+    - dispatcher blocks on variable that indicates q is occupied
+
+try tcpdump

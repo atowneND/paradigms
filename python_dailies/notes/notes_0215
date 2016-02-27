@@ -1,0 +1,7 @@
+def myfun(addend1=0.0,addend2=0.0,divisor=1.0):
+    return (addend1+addend2)/divisor
+myfun(1,1,1) = 2
+myfun(divisor=2,addend1=1,addend2=1) = 1
+# don't put unnamed variables as arguments after named variables... just don't mix
+
+class <name>(): vs class <name>(Object): # object needs to be capitalized?
