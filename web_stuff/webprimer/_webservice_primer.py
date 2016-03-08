@@ -11,8 +11,6 @@ import requests
 import json
 
 class _webservice_primer:
-    print "hi"
-
     def __init__(self, apikey):
         self.API_KEY = apikey
         self.SITE_URL = 'http://student02.cse.nd.edu:40001'
