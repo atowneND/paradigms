@@ -6,14 +6,14 @@ class TestRecommendations(unittest.TestCase):
 
 	#@classmethod
 	#def setUpClass(self):
-	SITE_URL = 'localhost:40092'
+	SITE_URL = 'http://student03.cse.nd.edu:40001'
 	RECOMMENDATIONS_URL = SITE_URL + '/recommendations/'
 	RATINGS_URL = SITE_URL + '/ratings/'
 	RESET_URL = SITE_URL + '/reset/'
 
 	def reset_data(self):
 		m = {}
-		m['apikey'] = '1O44fU28eQ'
+		m['apikey'] = 'AAAAAAAB'
 		r = requests.put(self.RESET_URL, json.dumps(m))
 
 	def is_json(self, resp):
@@ -40,7 +40,7 @@ class TestRecommendations(unittest.TestCase):
 		m = {}
 		m['movie_id'] = movie_id
 		m['rating'] = rating
-		m['apikey'] = '1O44fU28eQ'
+		m['apikey'] = 'AAAAAAAB'
 		r = requests.put(self.RECOMMENDATIONS_URL + str(user_id), data = json.dumps(m))
 		self.assertTrue(self.is_json(r.content))
 		resp = json.loads(r.content)

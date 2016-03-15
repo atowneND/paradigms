@@ -6,13 +6,13 @@ class TestRatings(unittest.TestCase):
 
 	#@classmethod
 	#def setUpClass(self):
-	SITE_URL = 'http://student03.cse.nd.edu:40001'
+	SITE_URL = 'localhost:40092'
 	RATINGS_URL = SITE_URL + '/ratings/'
 	RESET_URL = SITE_URL + '/reset/'
 
 	def reset_data(self):
 		m = {}
-		m['apikey'] = 'AAAAAAAB'
+		m['apikey'] = '1O44fU28eQ'
 		r = requests.put(self.RESET_URL)
 
 	def is_json(self, resp):

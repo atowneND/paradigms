@@ -3,8 +3,9 @@
 # cherrypy 
 
 import cherrypy
-from dcont import MovieController
-from dcont import ResetController
+from moviecont import MovieController
+from resetcont import ResetController
+from foocont import MovieController as foocont
 from _movie_database import _movie_database as mdb
 
 datadir = '/afs/nd.edu/user37/cmc/Public/cse332_sp16/cherrypy/data'
@@ -19,8 +20,6 @@ class MovieService:
 
     def start_service(self):
         dispatcher = cherrypy.dispatch.RoutesDispatcher()
-        #conf = { 'global': {'server.socket_host': 'student02.cse.nd.edu', 'server.socket_port': 40092,},
-        #         '/'     : {'request.dispatch': dispatcher,}}
         conf = { 'global': {'server.socket_host': '127.0.0.1', 'server.socket_port': 40092,},
                  '/'     : {'request.dispatch': dispatcher,}}
     
@@ -29,6 +28,7 @@ class MovieService:
     
         ##### MOVIE #####
         moviecon = MovieController(self.mdb)
+        resetcon = ResetController(self.mdb)
         # GET
         dispatcher.connect('movie_get_all','/movies/', controller=moviecon, action='GET_ALL', conditions=dict(method=['GET']))
         dispatcher.connect('movie_get','/movies/:key', controller=moviecon, action='GET', conditions=dict(method=['GET']))
@@ -40,9 +40,8 @@ class MovieService:
         dispatcher.connect('movie_delete','/movies/:key', controller=moviecon, action='DELETE', conditions=dict(method=['DELETE']))
 
         ##### RESET #####
-        resetcon = ResetController(self.mdb)
         # POST/PUT
-        dispatcher.connect('reset_put_all','/reset/', controller=resetcon, action='PUT', conditions=dict(method=['PUT_ALL']))
+        dispatcher.connect('reset_put_all','/reset/', controller=resetcon, action='PUT_ALL', conditions=dict(method=['PUT']))
         dispatcher.connect('reset_put','/reset/:key', controller=resetcon, action='PUT', conditions=dict(method=['PUT']))
 
         self.load_posters(datadir+'/images.dat')

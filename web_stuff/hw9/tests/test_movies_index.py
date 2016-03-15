@@ -6,16 +6,16 @@ class TestMoviesIndex(unittest.TestCase):
 
 	#@classmethod
 	#def setUpClass(self):
-	#	self.SITE_URL = 'localhost:40001'
+	#	self.SITE_URL = 'http://student02.cse.nd.edu:40001'
 	#	self.MOVIES_URL = self.SITE_URL + '/movies/'
 	#	self.RESET_URL = self.SITE_URL + '/reset/'
-	SITE_URL = 'localhost:40092'
+	SITE_URL = 'http://student03.cse.nd.edu:40001'
 	MOVIES_URL = SITE_URL + '/movies/'
 	RESET_URL = SITE_URL + '/reset/'
 
 	def reset_data(self):
 		m = {}
-		m['apikey'] = 'A1O44fU28eQ'
+		m['apikey'] = 'AAAAAAAB'
 		r = requests.put(self.RESET_URL, json.dumps(m))
 
 	def is_json(self, resp):
@@ -45,7 +45,7 @@ class TestMoviesIndex(unittest.TestCase):
 		m = {}
 		m['title'] = 'ABC'
 		m['genres'] = 'Sci-Fi|Fantasy'
-		m['apikey'] = '1O44fU28eQ'
+		m['apikey'] = 'AAAAAAAB'
 		r = requests.post(self.MOVIES_URL, data = json.dumps(m))
 		self.assertTrue(self.is_json(r.content))
 		resp = json.loads(r.content)
@@ -62,7 +62,7 @@ class TestMoviesIndex(unittest.TestCase):
 		self.reset_data()
 
 		m = {}
-		m['apikey'] = '1O44fU28eQ'
+		m['apikey'] = 'AAAAAAAB'
 		r = requests.delete(self.MOVIES_URL, data = json.dumps(m))
 		self.assertTrue(self.is_json(r.content))
 		resp = json.loads(r.content)
