@@ -6,7 +6,7 @@ class TestMovies(unittest.TestCase):
 
     #@classmethod
     #def setUpClass(self):
-    SITE_URL = 'http://student02.cse.nd.edu:40092'
+    SITE_URL = 'localhost:40092'
     MOVIES_URL = SITE_URL + '/movies/'
     RESET_URL = SITE_URL + '/reset/'
 
@@ -45,7 +45,7 @@ class TestMovies(unittest.TestCase):
         m = {}
         m['title'] = 'ABC'
         m['genres'] = 'Sci-Fi|Fantasy'
-        m['apikey'] = '1O44fU28eQ'
+        m['apikey'] = 'AAAAAAAB'
         r = requests.put(self.MOVIES_URL + str(movie_id), data = json.dumps(m))
         self.assertTrue(self.is_json(r.content))
         resp = json.loads(r.content)
@@ -62,7 +62,7 @@ class TestMovies(unittest.TestCase):
         movie_id = 95
 
         m = {}
-        m['apikey'] = '1O44fU28eQ'
+        m['apikey'] = 'AAAAAAAB'
         r = requests.delete(self.MOVIES_URL + str(movie_id), data = json.dumps(m))
         self.assertTrue(self.is_json(r.content))
         resp = json.loads(r.content)

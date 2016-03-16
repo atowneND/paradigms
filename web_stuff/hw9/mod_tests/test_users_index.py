@@ -6,13 +6,13 @@ class TestUsersIndex(unittest.TestCase):
 
     #@classmethod
     #def setUpClass(self):
-    SITE_URL = 'http://student02.cse.nd.edu:40092'
+    SITE_URL = 'localhost:40092'
     USERS_URL = SITE_URL + '/users/'
     RESET_URL = SITE_URL + '/reset/'
 
     def reset_data(self):
         m = {}
-        m['apikey'] = '1O44fU28eQ'
+        m['apikey'] = 'AAAAAAAB'
         r = requests.put(self.RESET_URL, data = json.dumps(m))
 
     def is_json(self, resp):
@@ -48,7 +48,7 @@ class TestUsersIndex(unittest.TestCase):
         m['occupation'] = 4000
         m['age'] = 34
         m['zipcode'] = '46556'
-        m['apikey'] = '1O44fU28eQ'
+        m['apikey'] = 'AAAAAAAB'
         r = requests.post(self.USERS_URL, data = json.dumps(m))
         self.assertTrue(self.is_json(r.content))
         resp = json.loads(r.content)
@@ -65,7 +65,7 @@ class TestUsersIndex(unittest.TestCase):
         self.reset_data()
 
         m = {}
-        m['apikey'] = '1O44fU28eQ'
+        m['apikey'] = 'AAAAAAAB'
         r = requests.delete(self.USERS_URL, data = json.dumps(m))
         self.assertTrue(self.is_json(r.content))
         resp = json.loads(r.content)

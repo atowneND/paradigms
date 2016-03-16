@@ -5,7 +5,9 @@
 import cherrypy
 from moviecont import MovieController
 from resetcont import ResetController
-from foocont import MovieController as foocont
+from usercont import UserController
+from reccont import RecsController
+from ratingscont import RatingsController
 from _movie_database import _movie_database as mdb
 
 datadir = '/afs/nd.edu/user37/cmc/Public/cse332_sp16/cherrypy/data'
@@ -28,7 +30,6 @@ class MovieService:
     
         ##### MOVIE #####
         moviecon = MovieController(self.mdb)
-        resetcon = ResetController(self.mdb)
         # GET
         dispatcher.connect('movie_get_all','/movies/', controller=moviecon, action='GET_ALL', conditions=dict(method=['GET']))
         dispatcher.connect('movie_get','/movies/:key', controller=moviecon, action='GET', conditions=dict(method=['GET']))
@@ -39,7 +40,34 @@ class MovieService:
         dispatcher.connect('movie_delete_all','/movies/', controller=moviecon, action='DELETE_ALL', conditions=dict(method=['DELETE']))
         dispatcher.connect('movie_delete','/movies/:key', controller=moviecon, action='DELETE', conditions=dict(method=['DELETE']))
 
+        ##### USERS #####
+        usercon = UserController(self.mdb)
+        # GET
+        dispatcher.connect('user_get_all','/users/', controller=usercon, action='GET_ALL', conditions=dict(method=['GET']))
+        dispatcher.connect('user_get','/users/:key', controller=usercon, action='GET', conditions=dict(method=['GET']))
+        # POST/PUT
+        dispatcher.connect('user_post','/users/', controller=usercon, action='POST', conditions=dict(method=['POST']))
+        dispatcher.connect('user_put','/users/:key', controller=usercon, action='PUT', conditions=dict(method=['PUT']))
+        # DELETE
+        dispatcher.connect('user_delete_all','/users/', controller=usercon, action='DELETE_ALL', conditions=dict(method=['DELETE']))
+        dispatcher.connect('user_delete','/users/:key', controller=usercon, action='DELETE', conditions=dict(method=['DELETE']))
+
+        ##### REC'S #####
+        reccon = RecsController()
+        # GET
+        dispatcher.connect('recs_get','/recommendations/:key', controller=reccon, action='GET', conditions=dict(method=['GET']))
+        # PUT
+        dispatcher.connect('recs_put','/recommendations/:key', controller=reccon, action='PUT', conditions=dict(method=['PUT']))
+        # DELETE
+        dispatcher.connect('recs_delete','/recommendations/', controller=reccon, action='DELETE', conditions=dict(method=['DELETE']))
+
+        ##### RATINGS #####
+        ratcon = RatingsController()
+        # GET
+        dispatcher.connect('ratings_get','/ratings/:key', controller=ratcon, action='GET', conditions=dict(method=['GET']))
+
         ##### RESET #####
+        resetcon = ResetController(self.mdb)
         # POST/PUT
         dispatcher.connect('reset_put_all','/reset/', controller=resetcon, action='PUT_ALL', conditions=dict(method=['PUT']))
         dispatcher.connect('reset_put','/reset/:key', controller=resetcon, action='PUT', conditions=dict(method=['PUT']))

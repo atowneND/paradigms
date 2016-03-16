@@ -1,10 +1,10 @@
 # Ashley Towne
-# Movie Controller
+# Users Controller
 
 import json
 import cherrypy
 
-class MovieController():
+class UserController():
     def __init__(self, mdb):
         self.mdb = mdb
 
@@ -13,7 +13,7 @@ class MovieController():
         output = {'result':'success'}
         try:
             output['key'] = key
-            output['value'] = self.mdb.movies[int(key)]
+            output['value'] = self.mdb.users[int(key)]
         except KeyError as ex:
             output['result'] = 'error'
             output['message'] = 'key not found'
@@ -22,7 +22,7 @@ class MovieController():
     def GET_ALL(self):
         output = {'result':'success'}
         output['entries'] = [
-            {"key": k, "value": v} for k, v in self.mdb.movies.iteritems()
+            {"key": k, "value": v} for k, v in self.mdb.users.iteritems()
         ]
         return json.dumps(output, encoding='latin-1')
 
@@ -31,7 +31,7 @@ class MovieController():
         instr = cherrypy.request.body.read()
         indict = json.loads(instr)
         try:
-            self.mdb.movies[int(indict['key'])] = indict['value']
+            self.mdb.users[int(indict['key'])] = indict['value']
         except KeyError as ex:
             output['result'] = 'error'
             output['message'] = 'key not found'
@@ -43,7 +43,7 @@ class MovieController():
         instr = cherrypy.request.body.read()
         indict = json.loads(instr)
         try: 
-            self.mdb.movies[int(key)] = indict['value'] 
+            self.mdb.users[int(key)] = indict['value'] 
         except KeyError as ex:
             output['result'] = 'error'
             output['message'] = 'key not found'
@@ -51,16 +51,16 @@ class MovieController():
 
     def DELETE(self, key):
         output = {'result':'success'}
-        if int(key) not in self.mdb.movies:
+        if int(key) not in self.mdb.users:
             output['result'] = 'error'
             output['message'] = 'key not found'
         else:
-            del self.mdb.movies[int(key)]
+            del self.mdb.users[int(key)]
             output['message'] = "key {i} deleted".format(i=key)
         return json.dumps(output, encoding='latin-1')
 
     def DELETE_ALL(self):
         output = {'result':'success'}
-        self.mdb.movies.clear()
+        self.mdb.users.clear()
         return json.dumps(output, encoding='latin-1')
 

@@ -11,6 +11,7 @@ class MovieController():
     def GET(self, key):
         key = str(key)
         output = {'result':'success'}
+        print self.mdb.movies.keys()
         try:
             output['key'] = key
             output['value'] = self.mdb.movies[int(key)]
@@ -31,7 +32,7 @@ class MovieController():
         instr = cherrypy.request.body.read()
         indict = json.loads(instr)
         try:
-            self.mdb.movies[int(indict['key'])] = indict['value']
+            self.mdb.movies[str(indict['key'])] = indict['value']
         except KeyError as ex:
             output['result'] = 'error'
             output['message'] = 'key not found'
@@ -43,7 +44,7 @@ class MovieController():
         instr = cherrypy.request.body.read()
         indict = json.loads(instr)
         try: 
-            self.mdb.movies[int(key)] = indict['value'] 
+            self.mdb.movies[str(key)] = indict['value'] 
         except KeyError as ex:
             output['result'] = 'error'
             output['message'] = 'key not found'
@@ -51,11 +52,11 @@ class MovieController():
 
     def DELETE(self, key):
         output = {'result':'success'}
-        if int(key) not in self.mdb.movies:
+        if key not in self.mdb.movies:
             output['result'] = 'error'
             output['message'] = 'key not found'
         else:
-            del self.mdb.movies[int(key)]
+            del self.mdb.movies[str(key)]
             output['message'] = "key {i} deleted".format(i=key)
         return json.dumps(output, encoding='latin-1')
 
