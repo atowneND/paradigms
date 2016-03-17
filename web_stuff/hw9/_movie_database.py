@@ -16,7 +16,7 @@ class _movie_database:
                 line = line.rstrip()
                 movie_attr = line.split("::")
                 if (int(movie_attr[0])==int(mid)):
-                    self.movies[int(movie_attr[0])] = {'name':movie_attr[1],'genres':movie_attr[2]}
+                    self.movies[int(movie_attr[0])] = {'title':movie_attr[1],'genres':movie_attr[2]}
                     break
 
     def load_movies(self, movie_file):
@@ -25,19 +25,19 @@ class _movie_database:
             for line in f:
                 line = line.rstrip()
                 movie_attr = line.split("::") # movie attributes
-                self.movies[int(movie_attr[0])] = {'name':movie_attr[1],'genres':movie_attr[2]}
+                self.movies[int(movie_attr[0])] = {'title':movie_attr[1],'genres':movie_attr[2]}
 
     def get_movie(self, mid):
         if mid not in self.movies:
             return None
         else:
-            return [self.movies[mid]['name'], self.movies[mid]['genres']]
+            return [self.movies[mid]['title'], self.movies[mid]['genres']]
 
     def get_movies(self):
         return [i for i in self.movies]
 
     def set_movie(self, mid, movie):
-        self.movies[mid] = {'name':movie[0],'genres':movie[1]}
+        self.movies[mid] = {'title':movie[0],'genres':movie[1]}
 
     def delete_movie(self, mid):
         self.movies.pop(mid,None)
@@ -48,19 +48,19 @@ class _movie_database:
             for line in f:
                 line = line.rstrip()
                 user_attr = line.split("::") # user attributes
-                self.users[int(user_attr[0])] = {'gender':user_attr[1], 'age':user_attr[2], 'occupationcode':user_attr[3], 'zipcode':user_attr[4]}
+                self.users[int(user_attr[0])] = {'gender':user_attr[1], 'age':user_attr[2], 'occupation':user_attr[3], 'zipcode':user_attr[4]}
 
     def get_user(self, uid):
         if uid not in self.users:
             return None
         else:
-            return [self.users[uid]['gender'], int(self.users[uid]['age']), int(self.users[uid]['occupationcode']), self.users[uid]['zipcode']]
+            return [self.users[uid]['gender'], int(self.users[uid]['age']), int(self.users[uid]['occupation']), self.users[uid]['zipcode']]
     
     def get_users(self):
         return [i for i in self.users]
 
     def set_user(self, uid, user_attr):
-        self.users[uid] = {'gender':user_attr[0], 'age':user_attr[1], 'occupationcode':user_attr[2], 'zipcode':user_attr[3]}
+        self.users[uid] = {'gender':user_attr[0], 'age':user_attr[1], 'occupation':user_attr[2], 'zipcode':user_attr[3]}
 
     def delete_user(self, uid):
         self.users.pop(uid,None)
@@ -76,7 +76,7 @@ class _movie_database:
                 if mid not in self.ratings:
                     self.ratings[mid] = {uid:int(rate_attr[2])}
                 else:
-                    self.ratings[mid][uid] = int(rate_attr[2])
+                    self.ratings[mid][uid] = float(rate_attr[2])
 
     def get_rating(self, mid):
         if mid not in self.ratings:
@@ -87,16 +87,26 @@ class _movie_database:
 
     def get_highest_rated_movie(self):
         return max(
-                sorted(
-                        [[mid, self.get_rating(mid)] for mid in self.ratings],
+                sorted([[mid, self.get_rating(mid)] for mid in self.ratings],
                         key = lambda x: x[0],
                     ),
                 key = lambda x:(x[1], -x[0]),
             )[0]
-#        return max( [[self.get_rating(mid), mid] for mid in self.ratings] )[1]
+
+    def get_recommended_movie(self, uid):
+        return max(
+                sorted(
+                        [
+                            [mid, self.get_rating(mid)] if self.get_user_movie_rating(uid, mid) is None else [0,0] 
+                            for mid in self.ratings
+                            ],
+                        key = lambda x: x[0],
+                    ),
+                key = lambda x:(x[1], -x[0]),
+            )[0]
 
     def set_user_movie_rating(self, uid, mid, rating):
-        self.ratings[mid][uid] = int(rating)
+        self.ratings[mid][uid] = float(rating)
 
     def get_user_movie_rating(self, uid, mid):
         if (mid not in self.ratings) or (uid not in self.ratings[mid]):

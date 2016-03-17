@@ -1,15 +1,16 @@
 #!/bin/bash
 
-python main.py &
-echo "Continue?"
-read
-
+#python main.py &
+#echo "Continue?"
+#read
+#
 port=40092
 
 echo "MOVIES:"
 echo "Gets:"
 curl -X GET localhost:$port/movies/
 curl -X GET localhost:$port/movies/95
+exit
 echo ""
 echo "Deletes:"
 curl -X DELETE localhost:$port/movies/
@@ -19,7 +20,7 @@ echo "Put:"
 curl -X PUT -H "Content-Type: text/plain" -d'{"value": "4"}' localhost:$port/movies/95
 echo ""
 echo "Post:"
-curl -X POST -H "Content-Type: text/plain" -d'{"value": "4", "key":"95"}' localhost:$port/movies/
+curl -X POST -H "Content-Type: text/plain" -d'{"genres": "Animation", "title":"Foo"}' localhost:$port/movies/
 echo ""
 echo ""
 

@@ -6,7 +6,7 @@ class TestMovies(unittest.TestCase):
 
     #@classmethod
     #def setUpClass(self):
-    SITE_URL = 'localhost:40092'
+    SITE_URL = 'http://localhost:40092'
     MOVIES_URL = SITE_URL + '/movies/'
     RESET_URL = SITE_URL + '/reset/'
 

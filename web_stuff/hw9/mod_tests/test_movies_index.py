@@ -9,7 +9,7 @@ class TestMoviesIndex(unittest.TestCase):
     #	self.SITE_URL = 'localhost:40001'
     #	self.MOVIES_URL = self.SITE_URL + '/movies/'
     #	self.RESET_URL = self.SITE_URL + '/reset/'
-    SITE_URL = 'localhost:40092'
+    SITE_URL = 'http://localhost:40092'
     MOVIES_URL = SITE_URL + '/movies/'
     RESET_URL = SITE_URL + '/reset/'
 

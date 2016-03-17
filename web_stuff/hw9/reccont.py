@@ -9,11 +9,11 @@ class RecsController():
         self.mdb = mdb
 
     def GET(self, key):
-        key = str(key)
+        key = int(key)
         output = {'result':'success'}
         try:
-            output['key'] = key
-            output['value'] = self.mdb.users[int(key)]
+            mid = self.mdb.get_recommended_movie(key)
+            output['movie_id'] = int(mid)
         except KeyError as ex:
             output['result'] = 'error'
             output['message'] = 'key not found'
@@ -21,22 +21,22 @@ class RecsController():
 
     def PUT(self, key):
         output = {'result':'success'}
-        instr = cherrypy.request.body.read()
-        indict = json.loads(instr)
         try: 
-            self.mdb.users[int(key)] = indict['value'] 
+            instr = cherrypy.request.body.read()
+            indict = json.loads(instr)
+            print indict['rating']
+            self.mdb.set_user_movie_rating(key, indict['movie_id'], indict['rating'])
         except KeyError as ex:
             output['result'] = 'error'
             output['message'] = 'key not found'
         return json.dumps(output, encoding='latin-1')
 
-    def DELETE(self, key):
+    def DELETE(self):
         output = {'result':'success'}
-        if int(key) not in self.mdb.users:
+        try:
+            self.mdb.delete_all_ratings()
+        except Exception as ex:
             output['result'] = 'error'
-            output['message'] = 'key not found'
-        else:
-            del self.mdb.users[int(key)]
-            output['message'] = "key {i} deleted".format(i=key)
+            output['message'] = ex
         return json.dumps(output, encoding='latin-1')
 

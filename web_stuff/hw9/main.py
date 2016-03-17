@@ -10,8 +10,6 @@ from reccont import RecsController
 from ratingscont import RatingsController
 from _movie_database import _movie_database as mdb
 
-datadir = '/afs/nd.edu/user37/cmc/Public/cse332_sp16/cherrypy/data'
-
 class MovieService:
     def __init__(self):
         self.posters = {}
@@ -53,7 +51,7 @@ class MovieService:
         dispatcher.connect('user_delete','/users/:key', controller=usercon, action='DELETE', conditions=dict(method=['DELETE']))
 
         ##### REC'S #####
-        reccon = RecsController()
+        reccon = RecsController(self.mdb)
         # GET
         dispatcher.connect('recs_get','/recommendations/:key', controller=reccon, action='GET', conditions=dict(method=['GET']))
         # PUT
@@ -62,7 +60,7 @@ class MovieService:
         dispatcher.connect('recs_delete','/recommendations/', controller=reccon, action='DELETE', conditions=dict(method=['DELETE']))
 
         ##### RATINGS #####
-        ratcon = RatingsController()
+        ratcon = RatingsController(self.mdb)
         # GET
         dispatcher.connect('ratings_get','/ratings/:key', controller=ratcon, action='GET', conditions=dict(method=['GET']))
 
@@ -72,22 +70,7 @@ class MovieService:
         dispatcher.connect('reset_put_all','/reset/', controller=resetcon, action='PUT_ALL', conditions=dict(method=['PUT']))
         dispatcher.connect('reset_put','/reset/:key', controller=resetcon, action='PUT', conditions=dict(method=['PUT']))
 
-        self.load_posters(datadir+'/images.dat')
-        print self.get_poster_by_mid(1)
         cherrypy.quickstart(app)
-    
-    def get_poster_by_mid(self, mid):
-        if str(mid) in self.posters:
-            return self.posters[str(mid)]
-        else:
-            return '/default.jpg'
-    
-    def load_posters(self,movie_file):
-        self.posters = {}
-        with open(movie_file) as f:
-            for line in f:
-                line = line.rstrip().split("::")
-                self.posters[str(line[0])] = str(line[2])
     
 if __name__ == '__main__':
     m = MovieService()

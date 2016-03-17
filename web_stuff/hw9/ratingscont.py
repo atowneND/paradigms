@@ -9,11 +9,11 @@ class RatingsController():
         self.mdb = mdb
 
     def GET(self, key):
-        key = str(key)
+        key = int(key)
         output = {'result':'success'}
         try:
-            output['key'] = key
-            output['value'] = self.mdb.users[int(key)]
+            output['movie_id'] = key
+            output['rating'] = self.mdb.get_rating(key)
         except KeyError as ex:
             output['result'] = 'error'
             output['message'] = 'key not found'
