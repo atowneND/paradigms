@@ -1,0 +1,45 @@
+tutorials: http://w3schools.com
+
+dictionaries are objects
+obj = { name:"donald",
+        species:"duck",
+        sound:"quack",
+        quack:function(){alert("quack");}}
+
+JS:
+var label = document.createElement("p");
+label.setAttribute("id","theLabel");
+var labelText = document.createTextNode("who?");
+lable.appendCHild(labelText);
+document.body.appendChild(label);
+function changeText() {label.innerHTML="Patrick Flynn";}
+var Bird = {name:"Larry",
+            fly:function(){alert("flap");}}
+var duck = {name:"donald",
+            wingspan:"20",
+            quack:function(){alert("quacking");},
+            addClickHandler:function(hndlr,args){
+                document.getElementById("theButton").onmouseup.function(){hndlr(args);}
+                }
+            };
+duck.quack();
+duck.__proto__ = Bird;
+function showMyMessage(args){alert(args[0]):}
+duck.addClickHandler(showMyMessage,["my duck click"]);
+
+duck.fly();
+alert(Bird.name); "Larry"
+alert(duck.name); "Donald"
+
+
+HTML:
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>JavaScript Daily 12</title>
+    </head>
+    <body>
+        <button id="theButton">CLICK HERE</button>
+        <script type="text/javascript" src="scripts/main.js"></script> <!import/include code>
+    </body>
+</html>
