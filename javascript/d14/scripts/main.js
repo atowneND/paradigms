@@ -49,3 +49,11 @@ label.setText("who?");
 
 args = ["Ashley Towne", label]
 button.addClickEventHandler(changeText, args);
+
+var xhttp = new XMLHttpRequest();
+movie = xhttp.open("GET","http://student02.cse.nd.edu:40001/movies/32");
+xhttp.onload = function(){
+    args = [xhttp.responseText, label];
+    changeText(args);
+}
+xhttp.send()
