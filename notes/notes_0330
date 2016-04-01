@@ -1,0 +1,68 @@
+button.onclick = function() {
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", url, true);
+    xhr.onload = function(e){
+        if (xhr.readState==4){
+            label.innerHTML = "Body (JSON)"+xhr.responseText;
+            var j = JSON.parse(xhr.responseText)
+            console.log("Array? "+Array.isArraya(j));
+            if (Array.isArray(j)){
+                s="Formatted list of names: [";
+                for (var index in j)
+                    s = s+j[index].name+" "+j[index].surname+",";
+                    s=s+"]"
+                }else{
+                    s = "Name: " +j.name + " " + j.surname;
+                }
+                label3.innerHTML = s;
+                label2.innerHTML = "response haeders " + xhr.getAllResponseHeaders();
+            }else{
+                console.log("onload status: " + e)
+            }
+never mind, look at piazza
+
+new one:
+var cat = "nasty"
+alert("1. stupid cat is: " + cat)
+// this = a context
+
+this.cat = "dummy"
+alert("2. stupid this.cat is: " + this.cat) // dummy
+alert("3. stupid cat is: " + cat) // dummy
+
+function testCat(){
+    this.cat = "dinner";
+    alert("4. in testCat() context, this.cat is: " + this.cat); // dinner
+}
+
+testCat();
+alert("4b. after testCat(), window cat is: " + cat); // dinner
+// without new, we don't establish a new context, so testCat() changed the
+// current context, which in this case was top level
+
+var othercat = {
+    cat : "DrunkyMcDrunkPants";
+}
+
+function testCat2() {
+    alert("5. in testcat2() context, this.cat is: " + this.cat); // dinner
+}
+
+testCat2()
+testCat2.call(othercat); // this = othercat, method stealing
+
+
+python stuff
+import cherrypy
+from movies import MovieController
+from auth import AuthManager
+
+class optionsController:
+    def OPTIONS(self, *args, **kwargs):
+        return ""
+
+def CORS():
+cherrypy.response.headers....
+
+def start_service():
+    fuck it, just look online

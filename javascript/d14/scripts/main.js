@@ -20,5 +20,6 @@ var xhttp = new XMLHttpRequest();
 movie = xhttp.open("GET","http://student02.cse.nd.edu:40001/movies/32");
 xhttp.onload = function(handler,args){
      return handler(args); }
-
 xhttp.send()
+
+
