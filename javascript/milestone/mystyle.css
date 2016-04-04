@@ -1,0 +1,14 @@
+h1 {
+    color: #00FF00;
+    text-align:center
+}
+
+#movie_img {
+    display:flex;
+    color: #0000FF;
+    position: absolute;
+    left: 300px;
+    top: 295px;
+}
+#yo{flex:9;}
+#hi{flex:2;}

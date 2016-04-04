@@ -4,6 +4,7 @@
 
 function Item() {
     this.addToDocument=function(){
+        console.log(this);
         document.body.appendChild(this.item);
     };
 };
@@ -49,8 +50,16 @@ function Dropdown() {
     };
 };
 
+function Image(){
+    this.createImage = function(xhttp){
+        this.item = document.createElement("img");
+        this.item.src = "test_image.png";
+        this.addToDocument();
+    };
+};
+
 function changeText(args){
-    args[0].setText(xhttp.responseText);
+    args[0].setText(JSON.parse(xhttp.responseText)["title"]);
     args[1].setText(JSON.parse(xhr.responseText)["rating"]);
 };
 
