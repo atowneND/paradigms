@@ -82,15 +82,17 @@ class MoviesQT(qtgui.QMainWindow):
                 'Set User',
                 "User ID:",
             )
-        if ans and isinstance(uid, int):
-            self.uid = uid
-            self.update()
-        elif not isinstance(uid, int):
-            msg = qtgui.QMessageBox.warning(
-                    self,
-                    'WARNING',
-                    "User ID must be an integer",
-                )
+        if ans:
+            try:
+                uid = int(uid)
+                self.uid = uid
+                self.update()
+            except Exception as ex:
+                msg = qtgui.QMessageBox.warning(
+                        self,
+                        'WARNING',
+                        "User ID must be an integer",
+                    )
 
     def getProfile(self):
         r = requests.get(self.USERS_URL + str(self.uid)).json()
