@@ -5,6 +5,7 @@ import json
 import cherrypy
 
 datadir = '/afs/nd.edu/user37/cmc/Public/cse332_sp16/cherrypy/data'
+datadir = '/home/ashley/Documents/paradigms/javascript/milestone/ml-1m'
 
 class MovieController():
     def __init__(self, mdb):
@@ -60,7 +61,7 @@ class MovieController():
 
     def PUT(self, key):
         output = {'result':'success'}
-        try: 
+        try:
             instr = cherrypy.request.body.read()
             indict = json.loads(instr)
             self.mdb.set_movie(int(key), [indict['title'],indict['genres']])
@@ -82,7 +83,7 @@ class MovieController():
 
     def DELETE_ALL(self):
         output = {'result':'success'}
-        try: 
+        try:
             self.mdb.movies = {}
         except Exception as ex:
             output['result'] = 'error'
@@ -94,11 +95,11 @@ class MovieController():
             return self.posters[str(mid)]
         else:
             return '/default.jpg'
-    
+
     def load_posters(self,movie_file):
         self.posters = {}
         with open(movie_file) as f:
             for line in f:
                 line = line.rstrip().split("::")
                 self.posters[str(line[0])] = str(line[2])
-    
+

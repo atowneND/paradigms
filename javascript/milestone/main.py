@@ -1,14 +1,19 @@
 # Ashley Towne
 # 3/18/2016
-# cherrypy 
+# cherrypy
 
 import cherrypy
-from moviecont import MovieController
-from resetcont import ResetController
-from usercont import UserController
-from reccont import RecsController
-from ratingscont import RatingsController
+from controllers.moviecont import MovieController
+from controllers.resetcont import ResetController
+from controllers.usercont import UserController
+from controllers.reccont import RecsController
+from controllers.ratingscont import RatingsController
 from _movie_database import _movie_database as mdb
+
+def CORS():
+    cherrypy.response.headers["Access-Control-Allow-Origin"] = ""
+    cherrypy.response.headers["Access-Control-Allow-Methods"] = "GET, PUT, POST, DELETE, OPTIONS"
+    cherrypy.response.headers["Access-Control-Allow-Credentials"] = "true"
 
 class MovieService:
     def __init__(self):
@@ -21,11 +26,11 @@ class MovieService:
     def start_service(self):
         dispatcher = cherrypy.dispatch.RoutesDispatcher()
         conf = { 'global': {'server.socket_host': '127.0.0.1', 'server.socket_port': 40092,},
-                 '/'     : {'request.dispatch': dispatcher,}}
-    
+                '/'     : {'request.dispatch': dispatcher,'tools.CORS.on':True,}}
+
         cherrypy.config.update(conf)
         app = cherrypy.tree.mount(None, config=conf)
-    
+
         ##### MOVIE #####
         moviecon = MovieController(self.mdb)
         # GET
@@ -71,7 +76,8 @@ class MovieService:
         dispatcher.connect('reset_put','/reset/:key', controller=resetcon, action='PUT', conditions=dict(method=['PUT']))
 
         cherrypy.quickstart(app)
-    
+
 if __name__ == '__main__':
+    cherrypy.tools.CORS = cherrypy.Tool('before_finalize',CORS)
     m = MovieService()
     m.start_service()
