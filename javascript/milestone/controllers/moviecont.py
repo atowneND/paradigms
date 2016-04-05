@@ -5,7 +5,6 @@ import json
 import cherrypy
 
 datadir = '/afs/nd.edu/user37/cmc/Public/cse332_sp16/cherrypy/data'
-datadir = '/home/ashley/Documents/paradigms/javascript/milestone/ml-1m'
 
 class MovieController():
     def __init__(self, mdb):
