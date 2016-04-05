@@ -7,13 +7,13 @@ Button.prototype = new Item();
 Dropdown.prototype = new Item();
 Image.prototype = new Item();
 
-var hostname = "http://student02.cse.nd.edu"
+var hostname = "student02.cse.nd.edu"
 
 var xhttp = new XMLHttpRequest();
-movie = xhttp.open("GET","http://"+hostname+":40092/movies/32");
+movie = xhttp.open("GET","http://student02.cse.nd.edu:40092/movies/32");
 
 var xhr = new XMLHttpRequest();
-rating = xhr.open("GET","http://"+hostname+":40092/ratings/32");
+rating = xhr.open("GET","http://student02.cse.nd.edu:40092/ratings/32");
 
 label = new Label();
 label.createLabel("title", "theLabel");

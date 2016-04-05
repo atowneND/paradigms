@@ -3,4 +3,5 @@ get_homework
 *.pyc
 *.zip
 *jpg
+*.png
 web_stuff/movie_rec/images/
