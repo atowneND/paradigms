@@ -25,7 +25,7 @@ class MovieService:
 
     def start_service(self):
         dispatcher = cherrypy.dispatch.RoutesDispatcher()
-        conf = { 'global': {'server.socket_host': '127.0.0.1', 'server.socket_port': 40092,},
+        conf = { 'global': {'server.socket_host': '0.0.0.0', 'server.socket_port': 40092,},
                 '/'     : {'request.dispatch': dispatcher,'tools.CORS.on':True,}}
 
         cherrypy.config.update(conf)
