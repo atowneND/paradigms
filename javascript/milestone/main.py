@@ -8,10 +8,11 @@ from controllers.resetcont import ResetController
 from controllers.usercont import UserController
 from controllers.reccont import RecsController
 from controllers.ratingscont import RatingsController
+from controllers.optcont import optionsController
 from _movie_database import _movie_database as mdb
 
 def CORS():
-    cherrypy.response.headers["Access-Control-Allow-Origin"] = ""
+    cherrypy.response.headers["Access-Control-Allow-Origin"] = "*"
     cherrypy.response.headers["Access-Control-Allow-Methods"] = "GET, PUT, POST, DELETE, OPTIONS"
     cherrypy.response.headers["Access-Control-Allow-Credentials"] = "true"
 
@@ -74,6 +75,17 @@ class MovieService:
         # POST/PUT
         dispatcher.connect('reset_put_all','/reset/', controller=resetcon, action='PUT_ALL', conditions=dict(method=['PUT']))
         dispatcher.connect('reset_put','/reset/:key', controller=resetcon, action='PUT', conditions=dict(method=['PUT']))
+
+        ##### OPTIONS #####
+        optcon = optionsController()
+        dispatcher.connect('movie_options', '/movies/:movie_id', controller=optcon, action='OPTIONS', conditions=dict(method=['OPTIONS']))
+        dispatcher.connect('movie_index_options', '/movies/', controller=optcon, action='OPTIONS', conditions=dict(method=['OPTIONS']))
+        dispatcher.connect('user_options', '/users/:user_id', controller=optcon, action='OPTIONS', conditions=dict(method=['OPTIONS']))
+        dispatcher.connect('user_index_options', '/users/', controller=optcon, action='OPTIONS', conditions=dict(method=['OPTIONS']))
+        dispatcher.connect('vote_index_options', '/recommendations/', controller=optcon, action='OPTIONS', conditions=dict(method=['OPTIONS']))
+        dispatcher.connect('vote_options', '/recommendations/:user_id', controller=optcon, action='OPTIONS', conditions=dict(method=['OPTIONS']))
+        dispatcher.connect('rating_options', '/ratings/:movie_id', controller=optcon, action='OPTIONS', conditions=dict(method=['OPTIONS']))
+        dispatcher.connect('reset_options', '/reset/', controller=optcon, action='OPTIONS', conditions=dict(method=['OPTIONS']))
 
         cherrypy.quickstart(app)
 

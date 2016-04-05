@@ -51,34 +51,77 @@ function Dropdown() {
 };
 
 function Image(){
-    this.createImage = function(xhttp){
+    this.createImage = function(){
         this.item = document.createElement("img");
-        this.item.src = "test_image.png";
+        this.item.src = "/~cmc/teaching/cse30332_sp16/images/dCTuPRukbDs3mOSx9SD0PCMRd2g.jpg"
         this.addToDocument();
     };
 };
 
+function upvote(args){
+    submitVote([5, args[2]]);
+    updatePage(args);
+};
+
+function downvote(args){
+    submitVote([1, args[2]]);
+    updatePage(args);
+};
+
+function updatePage(args){
+    var user_id = args[2];
+
+    get_mid(
+        user_id,
+        function (movie_id) {
+            var xhttp_title = new XMLHttpRequest();
+            xhttp_title.open("GET","http://student02.cse.nd.edu:40092/movies/"+movie_id.toString());
+            xhttp_title.send();
+
+            var xhttp_rating = new XMLHttpRequest();
+            xhttp_rating.open("GET","http://student02.cse.nd.edu:40092/ratings/"+movie_id.toString());
+            xhttp_rating.send();
+
+            xhttp_title.onload = function(){
+                changeText([args[0], xhttp_title, "title"]);
+            };
+            xhttp_rating.onload = function(){
+                changeText([args[1], xhttp_rating, "rating"]);
+            };
+        }
+    );
+
+};
+
 function changeText(args){
-    args[0].setText(JSON.parse(xhttp.responseText)["title"]);
-    args[1].setText(JSON.parse(xhr.responseText)["rating"]);
+    args[0].setText(JSON.parse(args[1].responseText)[args[2]]);
 };
 
 function submitVote(args){
-    var rating = args[0].getSelected();
-    if (rating=="Just Plain Bad"){
-        rat = 1;
-    }else if (rating=="Not So Good"){
-        rat = 2;
-    }else if (rating=="OK I guess"){
-        rat = 3;
-    }else if (rating=="Pretty Good"){
-        rat = 4;
-    }else if (rating=="Awesome!"){
-        rat = 5;
-    }
-    var url = "http://student02.cse.nd.edu:40001/recommendations/95";
-    http = new XMLHttpRequest();
-    var params = "rating="+rating;
-    http.open("PUT", url, true);
-    http.send(JSON.stringify({"rating":rat, "movie_id": 32, "apikey": "DERP"}));
+    var rat = args[0];
+    var user_id = args[1];
+    get_mid(
+        user_id,
+        function (movie_id) { 
+            var url = "http://student02.cse.nd.edu:40092/recommendations/"+user_id.toString();
+            var http = new XMLHttpRequest();
+
+            http.open("PUT", url, true);
+            http.send(JSON.stringify({"rating":rat, "movie_id": movie_id, "apikey": "DERP"}));
+        }
+    );
+
+};
+
+function get_mid(args,fn){
+    var user_id = args;
+
+    var xhttp_rec = new XMLHttpRequest();
+    xhttp_rec.open("GET","http://student02.cse.nd.edu:40092/recommendations/"+user_id);
+    xhttp_rec.send();
+
+    xhttp_rec.onload = function(){
+        var mid = JSON.parse(xhttp_rec.responseText)["movie_id"];
+        fn(mid);
+    };
 };
