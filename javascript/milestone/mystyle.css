@@ -1,14 +1,18 @@
-h1 {
-    color: #00FF00;
+#div1 {
+    color: #0000FF;
     text-align:center
+}
+
+#leftDiv {
+    text-align:left
+}
+
+#rightDiv {
+    text-align:right
 }
 
 #movie_img {
     display:flex;
-    color: #0000FF;
-    position: absolute;
-    left: 300px;
-    top: 295px;
+    justify-content: center;
+    align-items: center;
 }
-#yo{flex:9;}
-#hi{flex:2;}

@@ -9,6 +9,17 @@ function Item() {
     };
 };
 
+function Div() {
+    this.createDiv = function(div_id){
+        this.item = document.createElement("div");
+        this.item.id = div_id;
+    };
+    this.addToDiv = function(child_obj){
+        this.item.appendChild(child_obj.item);
+        this.addToDocument();
+    };
+};
+
 function Label() {
     this.createLabel = function(text, id){
         this.item = document.createElement("p");
@@ -58,70 +69,66 @@ function Image(){
     };
 };
 
-function upvote(args){
-    submitVote([5, args[2]]);
-    updatePage(args);
-};
-
-function downvote(args){
-    submitVote([1, args[2]]);
-    updatePage(args);
-};
-
 function updatePage(args){
+    var title_label = args[0];
+    var rating_label = args[1];
     var user_id = args[2];
+    var movie_img = args[3];
 
     get_mid(
         user_id,
         function (movie_id) {
+            // Save rating
+            rating_label.movie_id = movie_id;
+
+            // Update title and rating
             var xhttp_title = new XMLHttpRequest();
             xhttp_title.open("GET","http://student02.cse.nd.edu:40092/movies/"+movie_id.toString());
-            xhttp_title.send();
 
             var xhttp_rating = new XMLHttpRequest();
             xhttp_rating.open("GET","http://student02.cse.nd.edu:40092/ratings/"+movie_id.toString());
-            xhttp_rating.send();
 
             xhttp_title.onload = function(){
-                changeText([args[0], xhttp_title, "title"]);
+                changeText([title_label, xhttp_title, "title"]);
+                movie_img.item.src = "/~cmc/teaching/cse30332_sp16/images"+JSON.parse(xhttp_title.responseText)["img"];
+                console.log(movie_img);
             };
             xhttp_rating.onload = function(){
-                changeText([args[1], xhttp_rating, "rating"]);
+                changeText([rating_label, xhttp_rating, "rating"]);
             };
+
+            xhttp_title.send();
+            xhttp_rating.send();
         }
     );
 
 };
 
 function changeText(args){
+    console.log(args[1].responseText);
     args[0].setText(JSON.parse(args[1].responseText)[args[2]]);
 };
 
 function submitVote(args){
     var rat = args[0];
-    var user_id = args[1];
-    get_mid(
-        user_id,
-        function (movie_id) { 
-            var url = "http://student02.cse.nd.edu:40092/recommendations/"+user_id.toString();
-            var http = new XMLHttpRequest();
+    var rating_label = args[1];
+    var user_id = args[2];
+    var url = "http://student02.cse.nd.edu:40092/recommendations/"+user_id.toString();
+    var http = new XMLHttpRequest();
 
-            http.open("PUT", url, true);
-            http.send(JSON.stringify({"rating":rat, "movie_id": movie_id, "apikey": "DERP"}));
-        }
-    );
+    http.open("PUT", url, true);
+    http.send(JSON.stringify({"rating":rat, "movie_id": rating_label.movie_id, "apikey": "DERP"}));
 
 };
 
-function get_mid(args,fn){
-    var user_id = args;
-
+function get_mid(user_id,fn){
     var xhttp_rec = new XMLHttpRequest();
     xhttp_rec.open("GET","http://student02.cse.nd.edu:40092/recommendations/"+user_id);
-    xhttp_rec.send();
 
     xhttp_rec.onload = function(){
         var mid = JSON.parse(xhttp_rec.responseText)["movie_id"];
         fn(mid);
     };
+
+    xhttp_rec.send();
 };
