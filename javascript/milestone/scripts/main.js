@@ -8,8 +8,7 @@ function upvote(args){
     var rating_label = args[1]
     var user_id = args[2]
     var desired_rating = 5;
-    submitVote([desired_rating, rating_label, user_id]);
-    updatePage(args);
+    submitVote([desired_rating, rating_label, user_id,args]);
 };
 
 function downvote(args){
@@ -17,8 +16,7 @@ function downvote(args){
     var rating_label = args[1]
     var user_id = args[2]
     var desired_rating = 1;
-    submitVote([desired_rating, rating_label, user_id]);
-    updatePage(args);
+    submitVote([desired_rating, rating_label, user_id,args]);
 };
 
 window.onload = function() {

@@ -7,6 +7,10 @@
     text-align:left
 }
 
+#downButton, #upButton {
+    margin: 20px;
+}
+
 #rightDiv {
     text-align:right
 }

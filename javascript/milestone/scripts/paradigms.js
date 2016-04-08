@@ -4,7 +4,6 @@
 
 function Item() {
     this.addToDocument=function(){
-        console.log(this);
         document.body.appendChild(this.item);
     };
 };
@@ -34,13 +33,13 @@ function Label() {
 function Button() {
     this.createButton = function(text, id){
         this.item = document.createElement("button");
-        this.item.setAttribute(id, text);
+        this.item.id = id;
         var labelText = document.createTextNode(text);
         this.item.appendChild(labelText);
         this.addToDocument();
     };
     this.addClickEventHandler = function(handler, args){
-        this.item.onmouseup = function() { handler(args); };
+        this.item.onclick = function() { handler(args); };
     };
 };
 
@@ -70,6 +69,7 @@ function Image(){
 };
 
 function updatePage(args){
+    console.log("this was claled");
     var title_label = args[0];
     var rating_label = args[1];
     var user_id = args[2];
@@ -78,6 +78,7 @@ function updatePage(args){
     get_mid(
         user_id,
         function (movie_id) {
+            console.log("This is our movie id: " + movie_id);
             // Save rating
             rating_label.movie_id = movie_id;
 
@@ -91,7 +92,6 @@ function updatePage(args){
             xhttp_title.onload = function(){
                 changeText([title_label, xhttp_title, "title"]);
                 movie_img.item.src = "/~cmc/teaching/cse30332_sp16/images"+JSON.parse(xhttp_title.responseText)["img"];
-                console.log(movie_img);
             };
             xhttp_rating.onload = function(){
                 changeText([rating_label, xhttp_rating, "rating"]);
@@ -105,7 +105,6 @@ function updatePage(args){
 };
 
 function changeText(args){
-    console.log(args[1].responseText);
     args[0].setText(JSON.parse(args[1].responseText)[args[2]]);
 };
 
@@ -117,6 +116,9 @@ function submitVote(args){
     var http = new XMLHttpRequest();
 
     http.open("PUT", url, true);
+    http.onload = function(){
+        updatePage(args[3])
+    };
     http.send(JSON.stringify({"rating":rat, "movie_id": rating_label.movie_id, "apikey": "DERP"}));
 
 };

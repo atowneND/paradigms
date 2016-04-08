@@ -106,7 +106,7 @@ class _movie_database:
             )[0]
 
     def set_user_movie_rating(self, uid, mid, rating):
-        self.ratings[mid][uid] = float(rating)
+        self.ratings[mid][int(uid)] = float(rating)
 
     def get_user_movie_rating(self, uid, mid):
         if (mid not in self.ratings) or (uid not in self.ratings[mid]):
