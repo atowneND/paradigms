@@ -3,6 +3,8 @@ get_homework
 *.pyc
 *.zip
 *jpg
+*wav
+media
 *.png
 web_stuff/movie_rec/images/
 tutorials
