@@ -1,0 +1,16 @@
+hard real time constraints vs soft RT constraints
+late = failure                late = degraded performance
+RTC
+-> objects
+    -> tick()
+    -> next tick() (next object)
+    * order matters (data dependencies)
+
+7 steps
+1. set up game space (initialize)
+2. initialize game objects
+3. start game loop
+    4. tick regulation
+    5. user input reading
+    6. tick() all objects
+    7. update screen/display
