@@ -2,6 +2,7 @@ import sys
 import time
 import pygame
 import math
+import glob
 
 class GameSpace:
     def main(self):
@@ -20,6 +21,9 @@ class GameSpace:
         self.player = Player(self)
         self.enemy = Enemy(self)
         self.laser = Weapon(self)
+        self.explosion = Explosion(self)
+
+        self.explode = False
 
         # start game loop
         while 1:
@@ -49,6 +53,8 @@ class GameSpace:
             self.enemy.tick()
             if self.laser.fire == True:
                 self.laser.tick()
+            if self.explode == True:
+                self.explosion.tick()
 
             # display game objects
             self.screen.fill(self.black)
@@ -60,6 +66,8 @@ class GameSpace:
             self.screen.blit(self.player.image, self.player.rect)
             if self.laser.fire == True:
                 self.screen.blit(self.laser.image, self.laser.rect)
+            if self.explode == True:
+                self.screen.blit(self.explosion.image, self.laser.rect)
 
             pygame.display.flip()
 
@@ -111,6 +119,7 @@ class Enemy(pygame.sprite.Sprite):
 
         # properties
         self.health = 5
+        self.health = 1
         self.rect.x = self.gs.width/2.
         self.rect.y = self.gs.height/2.
         self.radius = self.rect.width/2.
@@ -125,6 +134,7 @@ class Enemy(pygame.sprite.Sprite):
             if self.health == 0:
                 self.image = pygame.image.load("media/globe_red100.png")
                 self.sound.play()
+                self.gs.explode = True
 
 class Weapon(pygame.sprite.Sprite):
     def __init__(self,gs=None):
@@ -142,6 +152,24 @@ class Weapon(pygame.sprite.Sprite):
         self.rect.x += self.speed*math.cos(self.dtheta+math.pi/2)
         self.rect.y += self.speed*math.sin(self.dtheta+math.pi/2)
         self.sound.play()
+
+class Explosion(pygame.sprite.Sprite):
+    def __init__(self,gs=None):
+        pygame.sprite.Sprite.__init__(self)
+
+        self.gs = gs
+        self.flist = sorted(glob.glob("media/explosion/*.png"))
+        self.findex = 0
+        self.image = pygame.image.load(self.flist[self.findex])
+        self.rect = self.image.get_rect()
+        self.rect.x = self.gs.width/2.
+        self.rect.y = self.gs.height/2.
+
+    def tick(self):
+        if self.findex<len(self.flist):
+            self.image = pygame.image.load( self.flist[self.findex])
+            time.sleep(0.25)
+            self.findex += 1
 
 if __name__ == '__main__':
     gs = GameSpace()
