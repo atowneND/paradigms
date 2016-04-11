@@ -1,0 +1,11 @@
+Controls:
+w - up
+s - down
+a - left
+d - right
+spacebar - shoot
+
+aim with the mouse
+you can only fire one shot at a time
+earth has 5 hitpoints until it explodes
+on the 6th, it will disappear completely
