@@ -1,0 +1,10 @@
+- [ ] make laser continuous
+    - [x] make it a list
+    - [x] cause the spacebar to add a new one to the list
+    - [x] tick on each in list
+    - [ ] redo health points
+    - [ ] fix dtheta
+- [ ] fix mouse position
+- [ ] fix explosion animation
+    - [ ] make it disappear immediately after explosion
+    - [ ] freeze everything else during explosion
