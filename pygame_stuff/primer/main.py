@@ -11,7 +11,6 @@ class GameSpace:
 
         self.size = self.width, self.height = (640, 1024)
         self.black = 0, 0, 0
-        self.speed = 4
         self.laser = []
 
         self.screen = pygame.display.set_mode(self.size)
@@ -34,45 +33,47 @@ class GameSpace:
             pygame.event.pump()
             keys = pygame.key.get_pressed()
             if keys[pygame.K_w]:
-                self.player.rect.y  = self.player.rect.y - 1
+                self.player.rect.y  = self.player.rect.y - self.player.speed
             if keys[pygame.K_s]:
-                self.player.rect.y  = self.player.rect.y + 1
+                self.player.rect.y  = self.player.rect.y + self.player.speed
             if keys[pygame.K_d]:
-                self.player.rect.x  = self.player.rect.x + 1
+                self.player.rect.x  = self.player.rect.x + self.player.speed
             if keys[pygame.K_a]:
-                self.player.rect.x  = self.player.rect.x - 1
+                self.player.rect.x  = self.player.rect.x - self.player.speed
             if keys[pygame.K_SPACE]:
                 self.player.tofire = True # should be able to delete this later
-                self.enemy.newhit = True # need to completely redo this
                 self.laser.append(Weapon(self))
-                self.laser[-1].fire = True
+            else:
+                self.player.tofire = False
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     sys.exit()
 
-            # send a tick to every game object
-            self.player.tick()
-            self.enemy.tick()
-            for i in self.laser:
-                i.tick()
-                print i.fire
-                if i.fire == False:
-                    del i
-            if self.explode == True:
-                self.explosion.tick()
-
-            # display game objects
+            # tick and display
             self.screen.fill(self.black)
 
+            # player
+            self.player.tick()
+            self.screen.blit(self.player.image, self.player.rect)
+
+            # enemy
+            self.enemy.tick()
             if self.enemy.health >= 0:
                 self.screen.blit(self.enemy.image, self.enemy.rect)
             else:
 #                self.enemy.sound.stop()
                 pass
-            self.screen.blit(self.player.image, self.player.rect)
+
+            # weapon
             for i in self.laser:
+                i.tick()
                 if i.fire == True:
                     self.screen.blit(i.image, i.rect)
+                elif i.fire == False:
+                    del i
+            if self.explode == True:
+                self.explosion.tick()
+
 #            if self.explode == True:
 #                self.screen.blit(self.explosion.image, self.laser.rect)
 
@@ -86,6 +87,7 @@ class Player(pygame.sprite.Sprite):
         self.image = pygame.image.load("media/deathstar.png")
         self.rect = self.image.get_rect()
         self.angle = 0
+        self.speed = 4
 
         # keep original image to limit resize errors
         self.orig_image = self.image
@@ -99,16 +101,11 @@ class Player(pygame.sprite.Sprite):
 
         # compute angle between current direction and mouse position
         theta_mouse = math.atan2(my-self.rect.center[1],mx-self.rect.center[0])
-        dtheta = (-(theta_mouse + self.angle)*180/math.pi)/2.
+        dtheta = (-(theta_mouse + self.angle)*180/math.pi)/2. - 45.
         self.angle = theta_mouse
 
         # prevents movement while firing
         if self.tofire == True:
-#            self.gs.laser.fire = True
-#            self.gs.laser.rect.x = self.rect.center[0] + math.cos(self.angle - math.pi/2)*self.rect.width/4.
-#            self.gs.laser.rect.y = self.rect.center[1] + math.sin(self.angle - math.pi/2)*self.rect.height/4.
-#            self.gs.laser.dtheta = self.angle - math.pi/2
-#            self.tofire = False
             pass
         else:
             # rotate the image to face the mouse
@@ -126,24 +123,22 @@ class Enemy(pygame.sprite.Sprite):
 #        self.sound = pygame.mixer.Sound("media/explode.wav")
 
         # properties
-        self.health = 5
-        self.health = 1
+        self.health = 100
         self.rect.x = self.gs.width/2.
         self.rect.y = self.gs.height/2.
         self.radius = self.rect.width/2.
         self.newhit = True
 
     def tick(self):
-        pass
-#        if pygame.sprite.collide_circle(self, self.gs.laser) and self.newhit==True:
-#            self.health -= 1
-#            self.newhit = False
-#            self.gs.laser.fire = False
-#            self.gs.laser.sound.stop()
-#            if self.health == 0:
-#                self.image = pygame.image.load("media/globe_red100.png")
-#                self.sound.play()
-#                self.gs.explode = True
+        if self.health == 0:
+            self.image = pygame.image.load("media/globe_red100.png")
+            self.sound.play()
+            self.gs.explode = True
+        else:
+            self.image = pygame.image.load("media/globe_red100.png")
+            time.sleep(0.1)
+            self.image = pygame.image.load("media/globe.png")
+
 
 class Weapon(pygame.sprite.Sprite):
     def __init__(self,gs=None):
@@ -152,17 +147,23 @@ class Weapon(pygame.sprite.Sprite):
         self.gs = gs
         self.image = pygame.image.load("media/laser.png")
         self.rect = self.image.get_rect()
-        self.fire = False
+
+        # geometry
         self.speed = 6
-        self.dtheta = 0
+        self.rect.x = self.gs.player.rect.center[0] + math.cos(self.gs.player.angle)*self.gs.player.rect.width/4.
+        self.rect.y = self.gs.player.rect.center[1] + math.sin(self.gs.player.angle)*self.gs.player.rect.height/4.
+        self.dtheta = self.gs.player.angle - math.pi/2
+
+        # other properties
+        self.fire = True
 
 #        self.sound = pygame.mixer.Sound("media/screammachine.wav")
 
     def tick(self):
-        print "laser ticked"
         self.rect.x += self.speed*math.cos(self.dtheta+math.pi/2)
         self.rect.y += self.speed*math.sin(self.dtheta+math.pi/2)
         if pygame.sprite.collide_circle(self.gs.enemy, self):
+            self.gs.enemy.health -= 1
             self.fire = False
 #        self.sound.play()
 
