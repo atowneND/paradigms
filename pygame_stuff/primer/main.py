@@ -21,8 +21,7 @@ class GameSpace:
         self.player = Player(self)
         self.enemy = Enemy(self)
         self.explosion = Explosion(self)
-
-        self.explode = False
+        self.weapon_sound = pygame.mixer.Sound("media/screammachine.wav")
 
         # start game loop
         while 1:
@@ -43,7 +42,9 @@ class GameSpace:
             if keys[pygame.K_SPACE]:
                 self.player.tofire = True # should be able to delete this later
                 self.laser.append(Weapon(self))
+                self.weapon_sound.play()
             else:
+                self.weapon_sound.stop()
                 self.player.tofire = False
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -58,24 +59,24 @@ class GameSpace:
 
             # enemy
             self.enemy.tick()
-            if self.enemy.health >= 0:
+            if self.enemy.health > 0:
+                # weapon
+                for i in self.laser:
+                    i.tick()
+                    if i.fire == True:
+                        self.screen.blit(i.image, i.rect)
+                    elif i.fire == False:
+                        del i
                 self.screen.blit(self.enemy.image, self.enemy.rect)
             else:
-#                self.enemy.sound.stop()
-                pass
-
-            # weapon
-            for i in self.laser:
-                i.tick()
-                if i.fire == True:
-                    self.screen.blit(i.image, i.rect)
-                elif i.fire == False:
-                    del i
-            if self.explode == True:
                 self.explosion.tick()
-
-#            if self.explode == True:
-#                self.screen.blit(self.explosion.image, self.laser.rect)
+                if self.explosion.earth_disappears == False:
+                    self.screen.blit(self.enemy.image, self.enemy.rect)
+                else:
+                    pass
+                self.screen.blit(self.explosion.image, self.explosion.rect)
+                self.enemy.sound.stop()
+                pass
 
             pygame.display.flip()
 
@@ -99,15 +100,15 @@ class Player(pygame.sprite.Sprite):
         # get mouse x and y position on the screen
         mx, my = pygame.mouse.get_pos()
 
-        # compute angle between current direction and mouse position
-        theta_mouse = math.atan2(my-self.rect.center[1],mx-self.rect.center[0])
-        dtheta = (-(theta_mouse + self.angle)*180/math.pi)/2. - 45.
-        self.angle = theta_mouse
-
         # prevents movement while firing
         if self.tofire == True:
             pass
         else:
+            # compute angle between current direction and mouse position
+            theta_mouse = math.atan2(my-self.rect.center[1],mx-self.rect.center[0])
+            dtheta = (-(theta_mouse + self.angle)*180/math.pi)/2. - 45.
+            self.angle = theta_mouse
+
             # rotate the image to face the mouse
             self.image = pygame.transform.rotate(self.orig_image, dtheta)
             self.rect = self.image.get_rect(center=self.rect.center)
@@ -120,20 +121,19 @@ class Enemy(pygame.sprite.Sprite):
         self.image = pygame.image.load("media/globe.png")
         self.rect = self.image.get_rect()
 
-#        self.sound = pygame.mixer.Sound("media/explode.wav")
+        self.sound = pygame.mixer.Sound("media/explode.wav")
 
         # properties
         self.health = 100
         self.rect.x = self.gs.width/2.
         self.rect.y = self.gs.height/2.
         self.radius = self.rect.width/2.
-        self.newhit = True
 
     def tick(self):
-        if self.health == 0:
+        print self.health
+        if self.health <= 0:
             self.image = pygame.image.load("media/globe_red100.png")
             self.sound.play()
-            self.gs.explode = True
         else:
             self.image = pygame.image.load("media/globe_red100.png")
             time.sleep(0.1)
@@ -157,15 +157,12 @@ class Weapon(pygame.sprite.Sprite):
         # other properties
         self.fire = True
 
-#        self.sound = pygame.mixer.Sound("media/screammachine.wav")
-
     def tick(self):
         self.rect.x += self.speed*math.cos(self.dtheta+math.pi/2)
         self.rect.y += self.speed*math.sin(self.dtheta+math.pi/2)
-        if pygame.sprite.collide_circle(self.gs.enemy, self):
+        if pygame.sprite.collide_circle(self.gs.enemy, self) and self.fire==True:
             self.gs.enemy.health -= 1
             self.fire = False
-#        self.sound.play()
 
 class Explosion(pygame.sprite.Sprite):
     def __init__(self,gs=None):
@@ -175,15 +172,24 @@ class Explosion(pygame.sprite.Sprite):
         self.flist = sorted(glob.glob("media/explosion/*.png"))
         self.findex = 0
         self.image = pygame.image.load(self.flist[self.findex])
+        self.size = self.image.get_size()
+        self.image = pygame.transform.scale(self.image, (int(self.size[0]*2), int(self.size[1]*2)))
         self.rect = self.image.get_rect()
         self.rect.x = self.gs.width/2.
         self.rect.y = self.gs.height/2.
+        self.earth_disappears = False
 
     def tick(self):
-        if self.findex<len(self.flist):
+        if self.findex<len(self.flist)-1:
             self.image = pygame.image.load( self.flist[self.findex])
+            self.size = self.image.get_size()
+            self.image = pygame.transform.scale(self.image, (int(self.size[0]*2), int(self.size[1]*2)))
             time.sleep(0.25)
             self.findex += 1
+            if self.findex>0.6*(len(self.flist)-1):
+                self.earth_disappears = True
+        else:
+            pass
 
 if __name__ == '__main__':
     gs = GameSpace()
