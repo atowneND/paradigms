@@ -127,7 +127,7 @@ class Enemy(pygame.sprite.Sprite):
         self.health = 100
         self.rect.x = self.gs.width/2.
         self.rect.y = self.gs.height/2.
-        self.radius = self.rect.width/2.
+        self.radius = 0.8*self.rect.width/2.
 
     def tick(self):
         print self.health
@@ -148,7 +148,7 @@ class Weapon(pygame.sprite.Sprite):
         self.image = pygame.image.load("media/laser.png")
         self.rect = self.image.get_rect()
 
-        # geometry
+        # geometry of firing vector
         self.speed = 6
         self.rect.x = self.gs.player.rect.center[0] + math.cos(self.gs.player.angle)*self.gs.player.rect.width/4.
         self.rect.y = self.gs.player.rect.center[1] + math.sin(self.gs.player.angle)*self.gs.player.rect.height/4.
