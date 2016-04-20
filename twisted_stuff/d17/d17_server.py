@@ -8,7 +8,7 @@ MY_PORT = 40092
 
 class MyConnection(LineReceiver):
     def __init__(self):
-        self.delimiter = "\n"
+        self.delimiter = "\r\n\r\n"
         self.addr = "nothing"
 
     def lineReceived(self,line):
