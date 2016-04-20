@@ -2,7 +2,6 @@ from twisted.internet import reactor as reactor
 from twisted.internet.protocol import ClientFactory, Protocol
 
 host = "student02.cse.nd.edu"
-host = 'localhost'
 port = 40092
 
 class ClientConnection(Protocol):
@@ -20,7 +19,7 @@ class ClientConnection(Protocol):
         """
         This is called when the connection is made and executes the get request
         """
-        print "connection received from IPv4Address(TCP, '", host, "',", port, ")"
+        print "new connection made to", host, "port", port
         self.transport.write("GET /movies/32 HTTP/1.0\r\n\r\n") # some get request
 
     def connectionLost(self, reason):
@@ -29,7 +28,7 @@ class ClientConnection(Protocol):
         if the connection is terminated cleanly, it will state the reason and
         stop the reactor
         """
-        print "connection lost because", reason
+        print "connection to", host, "lost because", reason
         reactor.stop()
 
 class ClientConnectionFactory(ClientFactory):
