@@ -1,0 +1,80 @@
+CLIENT
+----------------------------------------------------------------------------------------------------------------------------------------------------------
+- reactor     -> start program  -> run ->                                               -> ... ->                                 -> ... ->
+---------------------------------------|------------------------------------------------|------|----------------------------------|------|----------------
+- factory     ->                       -> buildProtocol() ->                            |      |                                  |      |
+----------------------------------------------------------|-----------------------------|------|----------------------------------|------|----------------
+- connection  ->                                          -> creating connection ->     |      -> connectionMade() ->             |      -> dataReceived()
+---------------------------------------------------------------------------------|------|--------------------------|--------------|-----------------------
+                                                                                 |      |                          |              |
+---------------------------------------------------------------------------------|------|--------------------------|--------------|-----------------------
+SERVER                                                                           -> ... ->                         -> get request ->
+
+
+reactor is the event processor
+
+
+PYTHON STUFF
+from twisted.internet.protocol import Factory
+from twisted.internet.protocol import Protocol
+from twisted.internet import reactor
+
+server_port = 40001
+
+class ServerConn(Protocol):
+    def __init__(self, addr):
+        self.addr = addr
+
+    def connectionMade(self, data):
+        print "new connection from", self.addr
+        self.transport.write("GET /movies/32 HTTP/1.0\r\n\r\n") # some get request
+
+    def dataReceived(self, data):
+        print "received data:", data
+
+    def connectionLost(self, reason):
+        print "lost connection from", self.addr
+        reactor.stop()
+
+class ServerConnFactory(Factory):
+    def __init__(self):
+        pass
+
+    def buildProtocol(self, addr):
+        return ServerConn(addr)
+
+if __name__ == "__main__":
+    reactor.connectTCP(server.host, server.port, ClientConnectionFactory())
+    reactor.run()
+
+
+
+NEW PYTHON EXAMPLE
+import os
+
+from twisted.internet.protocol import Factory
+from twisted.internet.protocol import Protocol
+from twisted.protocols.basic import LineReceiver
+from twisted.internet.tcp import Port
+from twisted.internet import reactor
+
+MY_PORT = 8008
+
+class MyConnection(LineReceiver):
+    ...
+    def __init__(self):
+        self.delimiter = "\n" # or whatever - this character doesn't actually get sent
+
+    # important part
+    def lineReceived(self, line):
+        print line
+        # delimit when you want the function to be called
+        # dataReceived is always called, but this one buffers it
+    ...
+
+class MyConnectionFactor(Factory):
+    def buildProtocol(self, addr)
+        return MyConnection()
+
+reactor.listenTCP(MY_PORT, MyConnectionFactor())
+reactor.run()

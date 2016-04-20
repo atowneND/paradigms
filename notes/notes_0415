@@ -51,6 +51,9 @@ server.host =
 server.port =
 
 class ClientConnection(Protocol):
+    def __init__(self):
+        pass
+
     def dataReceived(self, data):
         print "received:", data
 
@@ -64,8 +67,12 @@ class ClientConnection(Protocol):
         reactor.stop()
 
 class ClientConnectionFactory(ClientFactory):
+    def __init__(self):
+        self.serverconn = ClientConnection()
+
     def buildProtocol(self, addr):
-        return ClientConnection()
+        return self.serverconn
+        return ClientConnection
 
 if __name__ == "__main__":
     reactor.connectTCP(server.host, server.port, ClientConnectionFactory())
