@@ -21,6 +21,7 @@ class ClientConnection(Protocol):
         """
         print "new connection made to", host, "port", port
         self.transport.write("GET /movies/32 HTTP/1.0\r\n\r\n") # some get request
+        self.transport.loseConnection()
 
     def connectionLost(self, reason):
         """
@@ -28,7 +29,7 @@ class ClientConnection(Protocol):
         if the connection is terminated cleanly, it will state the reason and
         stop the reactor
         """
-        print "connection to", host, "lost because", reason
+        print "lost connection to", host, "port", port
         reactor.stop()
 
 class ClientConnectionFactory(ClientFactory):
@@ -36,12 +37,12 @@ class ClientConnectionFactory(ClientFactory):
     Factory to handle any number of instances of connections
     """
     protocol = ClientConnection
+
     def buildProtocol(self, addr):
         """
         Generates the protocol upon connection to spin up a ClientConnection
         instance to handle the request
         """
-        print "Connected"
         return ClientConnection()
 
 if __name__ == "__main__":
