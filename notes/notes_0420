@@ -1,0 +1,57 @@
+CLIENT
+----------------------------------------------------------------------------------------------------------------------------------------------------------
+        start -> connection -> GET    ->
+------------------------------*******-|-------------------------------------------------------------------------------------------------------------------
+PROXY (not a server) start -> connect -> process stuff -> GET ->          -> response
+-----------------------------------------------------------|-----------|----------------------------------------------------------------------------------
+STUD02  start ->                                           -> response ->
+----------------------------------------------------------------------------------------------------------------------------------------------------------
+
+****** ambiguous timing
+
+QUEUE
+put() -> 4 | 3 | 2 | 1 -> get()
+DEFERRED QUEUE
+         data
+put() -> 1 | 2 | 3 | 4 ->
+         callback
+       |   |   |   |   | -> get() - returns a deferred object that you install a callback line into, which is run when the data is available
+         object.addCallback(fn)
+         write fn(data) to handle it
+
+
+from twisted.internet.defer import DeferredQueue
+
+def callback0(data):
+    print 'Callback0 says: {}'.format(data)
+    queue.get().addCallback(callback0)
+
+#def callback1(data):
+#    print 'Callback1 says: {}'.format(data)
+
+queue = DeferredQueue)_
+fred = "astair"
+cary = "grant"
+
+queue.get().addCallback(callback0)
+#queue.get().addCallback(callback1)
+#queue.get().addCallback(callback0)
+
+queue.put(fred)
+queue.put(cary)
+
+- should have a deferred queue for both directions
+
+
+
+- client-to-client (peer-to-peer)
+- clint(s)-to-server
+    - heavyweight server
+    - matchmaking server
+        - game state could be in one (dominant/lead) client
+        - or game state could be in both
+
+pygame and twisted
+- each has its own event loop
+- solution - subordinate pygame to twisted using a loopingCall
+
