@@ -29,7 +29,6 @@ class DataServer(LineReceiver):
         by the delimiter. It makes a connection with the external server and
         creates an instance of the client connection class
         """
-        print "HOME.DataServer received:", returned_data,"from",self.addr
         client_queue.put(returned_data)
 
     def connectionMade(self):
@@ -101,7 +100,6 @@ class ClientServer(LineReceiver):
         by the delimiter. It makes a connection with the external server and
         creates an instance of the client connection class
         """
-        print "HOME.ClientServer received:", data,"from",self.addr
         data_queue.put(data)
 
     def connectionMade(self):

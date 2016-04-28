@@ -33,7 +33,6 @@ class SSHClient(Protocol):
         This is called when the server sends data back to the proxy client. The
         returned data is put on the queue for the proxy server to handle.
         """
-        print "WORK.SSHClient received:", returned_data
         data_queue.put(returned_data)
 
     def connectionMade(self):
@@ -63,7 +62,6 @@ class DataClient(Protocol):
         This is called when the server sends data back to the proxy client. The
         returned data is put on the queue for the proxy server to handle.
         """
-        print "WORK.DataClient received:", returned_data
         server_queue.put(returned_data)
 
     def connectionMade(self):
@@ -96,8 +94,6 @@ class CommandClient(Protocol):
         This is called when the server sends data back to the proxy client. The
         returned data is put on the queue for the proxy server to handle.
         """
-        print "WORK.CommandClient received:", returned_data
-        print "     Starting SSH connection"
         reactor.connectTCP(HOME_HOST,HOME_DATA_PORT,WorkClientFactory("Data"))
         reactor.connectTCP(SERVER_EXT,SERVER_PORT,WorkClientFactory("SSH"))
 
