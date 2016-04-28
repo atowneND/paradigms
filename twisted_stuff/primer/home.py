@@ -12,6 +12,8 @@ WORK_DATA_PORT = 41092
 SSH_PORT = 9001
 
 command_queue = DeferredQueue()
+data_queue = DeferredQueue()
+client_queue = DeferredQueue()
 
 class DataServer(LineReceiver):
     def __init__(self):
@@ -28,6 +30,7 @@ class DataServer(LineReceiver):
         creates an instance of the client connection class
         """
         print "HOME.DataServer received:", returned_data,"from",self.addr
+        client_queue.put(returned_data)
 
     def connectionMade(self):
         """
@@ -35,6 +38,10 @@ class DataServer(LineReceiver):
         server
         """
         print "connection to HOME.DataServer received from", self.addr
+        def sendData(data):
+            self.transport.write(data)
+            data_queue.get().addCallback(sendData)
+        data_queue.get().addCallback(sendData)
 
     def connectionLost(self, reason):
         """
@@ -55,7 +62,6 @@ class CommandServer(LineReceiver):
         """
         self.delimiter = "\r\n\r\n"
         self.addr = "nothing"
-        command_queue.get().addCallback(self.sendCommand2Work)
 
     def lineReceived(self,line):
         """
@@ -63,7 +69,7 @@ class CommandServer(LineReceiver):
         by the delimiter. It makes a connection with the external server and
         creates an instance of the client connection class
         """
-        print "HOME.CommandServer received:", line,"from",self.addr
+        pass
 
     def connectionMade(self):
         """
@@ -71,6 +77,10 @@ class CommandServer(LineReceiver):
         server
         """
         print "connection to HOME.CommandServer received from", self.addr
+        def sendData(data):
+            self.transport.write(data)
+            command_queue.get().addCallback(sendData)
+        command_queue.get().addCallback(sendData)
 
     def connectionLost(self, reason):
         """
@@ -78,38 +88,33 @@ class CommandServer(LineReceiver):
         """
         print "connection to HOME.CommandServer lost from", self.addr
 
-    def sendCommand2Work(self, data):
-        """
-        This sends data from the proxy to the client
-        """
-        print "here"
-        self.transport.write(data)
-
 class ClientServer(LineReceiver):
     def __init__(self):
         """
         HOME server; listens for connection from CLIENT
         """
-        self.delimiter = "\r\n\r\n"
         self.addr = "nothing"
 
-    def lineReceived(self,line):
+    def dataReceived(self,data):
         """
         This is called when the proxy receives data from the client, buffered
         by the delimiter. It makes a connection with the external server and
         creates an instance of the client connection class
         """
-        print "HOME.ClientServer received:", line,"from",self.addr
+        print "HOME.ClientServer received:", data,"from",self.addr
+        data_queue.put(data)
 
     def connectionMade(self):
         """
         This is called when a new connection is made from a client to the proxy
         server
         """
-        print "connection to HOME.ClientServer received from", self.addr
-        print "   Requesting ssh connection"
-        command_queue.put("")
+        def sendData(data):
+            self.transport.write(data)
+            client_queue.get().addCallback(sendData)
+        client_queue.get().addCallback(sendData)
         reactor.listenTCP(WORK_DATA_PORT, HomeServerFactory("Data"))
+        command_queue.put("merp")
 
     def connectionLost(self, reason):
         """

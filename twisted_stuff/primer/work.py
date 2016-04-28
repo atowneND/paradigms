@@ -18,6 +18,9 @@ HOME_DATA_PORT = 41092
 SERVER_EXT = "student02.cse.nd.edu"
 SERVER_PORT = 22
 
+data_queue = DeferredQueue()
+server_queue = DeferredQueue()
+
 class SSHClient(Protocol):
     """
     Work connects to home - data
@@ -31,6 +34,7 @@ class SSHClient(Protocol):
         returned data is put on the queue for the proxy server to handle.
         """
         print "WORK.SSHClient received:", returned_data
+        data_queue.put(returned_data)
 
     def connectionMade(self):
         """
@@ -39,7 +43,10 @@ class SSHClient(Protocol):
         from the external client.
         """
         print "new connection made from WORK.SSHClient to", HOME_HOST, "port", HOME_COMM_PORT
-        self.transport.write(self.data)
+        def sendData(data):
+            self.transport.write(data)
+            server_queue.get().addCallback(sendData)
+        server_queue.get().addCallback(sendData)
 
     def connectionLost(self, reason):
         """
@@ -51,15 +58,13 @@ class DataClient(Protocol):
     """
     Work connects to home - data
     """
-    def __init__(self, data):
-        self.data = data
-
     def dataReceived(self, returned_data):
         """
         This is called when the server sends data back to the proxy client. The
         returned data is put on the queue for the proxy server to handle.
         """
         print "WORK.DataClient received:", returned_data
+        server_queue.put(returned_data)
 
     def connectionMade(self):
         """
@@ -68,7 +73,10 @@ class DataClient(Protocol):
         from the external client.
         """
         print "new connection made from WORK.DataClient to", HOME_HOST, "port", HOME_COMM_PORT
-        self.transport.write(self.data)
+        def sendData(data):
+            self.transport.write(data)
+            data_queue.get().addCallback(sendData)
+        data_queue.get().addCallback(sendData)
 
     def connectionLost(self, reason):
         """
@@ -90,8 +98,8 @@ class CommandClient(Protocol):
         """
         print "WORK.CommandClient received:", returned_data
         print "     Starting SSH connection"
-        reactor.connectTCP(HOME_HOST,HOME_DATA_PORT,WorkClientFactory(returned_data, "Data"))
-        reactor.connectTCP(SERVER_EXT,SERVER_PORT,WorkClientFactory(returned_data, "SSH"))
+        reactor.connectTCP(HOME_HOST,HOME_DATA_PORT,WorkClientFactory("Data"))
+        reactor.connectTCP(SERVER_EXT,SERVER_PORT,WorkClientFactory("SSH"))
 
     def connectionMade(self):
         """
@@ -100,13 +108,12 @@ class CommandClient(Protocol):
         from the external client.
         """
         print "new connection made from WORK.CommandClient to", HOME_HOST, "port", HOME_DATA_PORT
-        self.transport.write(self.data)
 
     def connectionLost(self, reason):
         """
         This is called when the connection is lost
         """
-        reactor.stop()
+        pass
 
 class WorkClientFactory(ClientFactory):
     """
@@ -124,7 +131,7 @@ class WorkClientFactory(ClientFactory):
         if self.protocol == "Command":
             m = CommandClient()
         elif self.protocol == "Data":
-            m = DataClient(data)
+            m = DataClient()
         elif self.protocol == "SSH":
             m = SSHClient(data)
         else:
