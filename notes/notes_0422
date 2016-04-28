@@ -1,0 +1,26 @@
+make proxy's server have access to the client's methods etc
+-> put it in an instance variable
+
+reverse proxy
+
+blocks connections from home to work (firewall)
+home listens on two ports: work connects to each, one for command, one for data
+home listens on a third port and tells work (via data) that it wants an ssh connection
+work connects to the ssh target machine.
+data: (client->)home->work->service->work->home(->client)
+HOME          |          WORK                   SERVICE (student02:22)
+    <--------------------command
+              |
+    <--------------------data
+              |          service connection---->
+
+CLIENT                           start -> connect9001 -> wait                                           data -> wait         ->
+---------------------------------------------------|---------------------------------------------------------|---------------|-----------------------------
+HOME -> start      -> wait             -> listen9001  -> new connection -> wait         -> conn. rec.        |               |
+        listen32001                    |                 command        |               |                    |               |
+***************************************|********************************|***************|********************|***************|*****************************
+WORK             start -> connect32001 -> wait                          -> connect32002 -> connect22 ->      |               |
+                           command                                         data                      |       |               |
+-----------------------------------------------------------------------------------------------------|-------|---------------|-----------------------------
+SERVICE                                                                                              -> wait -> send it back ->
+----------------------------------------------------------------------------------------------------------------------------------------------------------
